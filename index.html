@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>داشبورد تحلیل امور استخدامی - اداره کل آموزش و پرورش خوزستان</title>
+<link href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+:root {
+  --bg: #f8fafc; --surface: #ffffff;
+  --sidebar-bg: #0f172a; --sidebar-text: #94a3b8;
+  --sidebar-active: #ffffff; --sidebar-active-bg: rgba(99, 102, 241, 0.15);
+  --accent: #4f46e5; --accent-hover: #4338ca;
+  --text: #0f172a; --text-muted: #64748b; --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  --radius: 12px;
+  --sidebar-w: 280px;
+  --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #06b6d4;
+}
+body.dark {
+  --bg: #0b1120; --surface: #151d2e; --sidebar-bg: #060a13;
+  --sidebar-text: #64748b; --text: #f1f5f9; --text-muted: #94a3b8; --border: #1e293b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Vazirmatn', Tahoma, sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
+
+.layout { display: flex; min-height: 100vh; position: relative; }
+
+/* ============================================
+   سایدبار با ساختار Flex برای اسکرول صحیح
+   ============================================ */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, width 0.3s ease;
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  z-index: 1000;
+  border-left: 1px solid rgba(255,255,255,0.05);
+  /* ارتفاع کامل صفحه */
+  height: 100vh;
+  /* مخفی کردن سرریز افقی */
+  overflow-x: hidden;
+  /* اسکرول عمودی */
+  overflow-y: auto;
+}
+.sidebar.collapsed { width: 72px; }
+
+/* اسکرول‌بار سفارشی سایدبار */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.sidebar-header { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 20px; 
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+.logo-icon { 
+  width: 40px; height: 40px; 
+  background: linear-gradient(135deg, var(--accent), #818cf8); 
+  border-radius: 10px; 
+  display: flex; align-items: center; justify-content: center; 
+  color: #fff; font-size: 18px; flex-shrink: 0; 
+}
+.logo-text { color: #fff; font-weight: 700; font-size: 13px; white-space: nowrap; line-height: 1.4; }
+.logo-text small { display: block; font-size: 10px; color: #94a3b8; font-weight: 400; }
+.sidebar.collapsed .logo-text { display: none; }
+
+/* ============================================
+   Nav با اسکرول مستقل
+   ============================================ */
+nav { 
+  padding: 16px 12px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+  /* اسکرول مستقل */
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* اسکرول‌بار nav */
+nav::-webkit-scrollbar {
+  width: 4px;
+}
+nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.nav-btn { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  width: 100%; 
+  padding: 12px 14px; 
+  background: none; 
+  border: none; 
+  color: var(--sidebar-text); 
+  cursor: pointer; 
+  font-family: inherit; 
+  font-size: 13px; 
+  border-radius: 10px; 
+  transition: all 0.2s; 
+  white-space: nowrap; 
+  text-align: right;
+  flex-shrink: 0;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.nav-btn.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); font-weight: 600; }
+.nav-btn .icon { width: 20px; text-align: center; flex-shrink: 0; }
+.sidebar.collapsed .nav-btn .label, 
+.sidebar.collapsed .submenu-arrow,
+.sidebar.collapsed .sub-btn .record-count { display: none; }
+
+.has-submenu { justify-content: space-between; }
+.submenu-arrow { transition: transform 0.3s; font-size: 12px; flex-shrink: 0; }
+.has-submenu.open .submenu-arrow { transform: rotate(180deg); }
+
+.submenu { 
+  max-height: 0; 
+  overflow: hidden; 
+  transition: max-height 0.4s ease; 
+  background: rgba(0,0,0,0.2); 
+  border-radius: 10px; 
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.submenu.open { max-height: 5000px; }
+
+/* ============================================
+   اصلاح کلیدی: نمایش کامل نام شیت‌ها
+   ============================================ */
+.sub-btn { 
+  padding: 10px 46px 10px 12px !important;
+  font-size: 12px !important; 
+  color: #cbd5e1 !important;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  white-space: normal !important;
+  text-align: right !important;
+  line-height: 1.6;
+  min-height: 40px;
+  border-radius: 8px;
+}
+
+.sub-btn > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.sub-btn .record-count {
+  font-size: 10px;
+  background: rgba(255,255,255,0.1);
+  padding: 3px 8px;
+  border-radius: 8px;
+  color: #cbd5e1;
+  flex-shrink: 0;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.sub-btn:hover {
+  background: rgba(255,255,255,0.05) !important;
+}
+
+.sub-btn.active { 
+  color: #fff !important; 
+  background: rgba(99,102,241,0.3) !important; 
+  border-right: 3px solid var(--accent); 
+}
+
+.sidebar.collapsed .sub-btn {
+  padding: 10px 14px !important;
+  justify-content: center;
+}
+.sidebar.collapsed .sub-btn > span:first-child {
+  display: none;
+}
+.sidebar.collapsed .submenu {
+  max-height: 0 !important;
+}
+
+.sidebar-footer { 
+  margin-top: auto; 
+  padding: 16px 20px; 
+  border-top: 1px solid rgba(255,255,255,0.05); 
+  text-align: center;
+  flex-shrink: 0;
+}
+.sidebar-footer span { font-size: 11px; color: var(--sidebar-text); white-space: nowrap; opacity: 0.8; display: block; }
+.sidebar-footer .designer-name { color: #ef4444 !important; font-weight: 800; }
+.sidebar-footer .site-link { font-size: 10px; color: var(--sidebar-text); text-decoration: none; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.sidebar.collapsed .sidebar-footer span, 
+.sidebar.collapsed .sidebar-footer .site-link { opacity: 0; pointer-events: none; }
+
+/* ============================================
+   Main
+   ============================================ */
+.main { 
+  flex: 1; 
+  margin-right: var(--sidebar-w); 
+  display: flex; 
+  flex-direction: column; 
+  transition: margin-right 0.3s ease; 
+  width: 100%; 
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+.sidebar.collapsed ~ .main { margin-right: 72px; }
+
+.topbar { 
+  background: var(--surface); 
+  height: 70px; 
+  padding: 0 24px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  border-bottom: 1px solid var(--border); 
+  box-shadow: var(--shadow); 
+  position: sticky; 
+  top: 0; 
+  z-index: 50; 
+  gap: 12px; 
+}
+.topbar-right, .topbar-left { display: flex; align-items: center; gap: 12px; }
+.global-search { position: relative; flex: 1; max-width: 400px; min-width: 200px; }
+.global-search input { width: 100%; padding: 10px 40px 10px 16px; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 10px; font-family: inherit; font-size: 13px; outline: none; transition: 0.2s; }
+.global-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.global-search i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+.global-search .clear-search { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: none; }
+.global-search .clear-search.show { display: block; }
+
+.icon-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 16px; flex-shrink: 0; }
+.icon-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.content-area { flex: 1; padding: 24px; overflow-y: auto; overflow-x: hidden; }
+
+.upload-area { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.upload-btn { color: #fff; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; text-decoration: none; white-space: nowrap; border: none; font-family: inherit; }
+.upload-btn.staff { background: linear-gradient(135deg, #10b981, #34d399); }
+.upload-btn.results { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.upload-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.section-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+.card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.card-header h3 { font-size: 15px; font-weight: 700; color: var(--text); display:flex; align-items:center; gap:8px; }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+.data-table th { padding: 12px 14px; text-align: right; font-size: 12px; font-weight: 700; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; position: sticky; top: 0; z-index: 10; }
+.data-table td { padding: 10px 14px; font-size: 12px; color: var(--text); border-bottom: 1px solid var(--border); white-space: nowrap; }
+.data-table tr:hover { background: rgba(79,70,229,0.05); }
+
+.filter-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; background: var(--surface); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); align-items: center; }
+.filter-select, .date-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; min-width: 140px; }
+.filter-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; min-width: 200px; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi-card { background: var(--surface); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; position: relative; overflow: hidden; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+.kpi-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--accent); }
+.kpi-card.green::before { background: var(--success); }
+.kpi-card.red::before { background: var(--danger); }
+.kpi-card.orange::before { background: var(--warning); }
+.kpi-card.purple::before { background: #a855f7; }
+.kpi-card.cyan::before { background: var(--info); }
+.kpi-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.kpi-icon.blue { background: rgba(79,70,229,0.1); color: var(--accent); }
+.kpi-icon.green { background: rgba(16,185,129,0.1); color: var(--success); }
+.kpi-icon.red { background: rgba(239,68,68,0.1); color: var(--danger); }
+.kpi-icon.orange { background: rgba(245,158,11,0.1); color: var(--warning); }
+.kpi-icon.purple { background: rgba(168,85,247,0.1); color: #a855f7; }
+.kpi-icon.cyan { background: rgba(6,182,212,0.1); color: var(--info); }
+.kpi-content { flex: 1; }
+.kpi-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 800; color: var(--text); }
+.kpi-trend { font-size: 10px; margin-top: 4px; display: flex; align-items: center; gap: 4px; color: var(--text-muted); }
+
+.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 24px; }
+.chart-card { background: var(--surface); border-radius: var(--radius); padding: 15px; border: 1px solid var(--border); height: 380px; display: flex; flex-direction: column; }
+.chart-card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.chart-card h4 i { color: var(--accent); }
+.chart-card canvas { flex: 1; min-height: 0; }
+
+.loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
+.spinner { width: 50px; height: 50px; border: 5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state { background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius); padding: 60px 20px; text-align: center; color: var(--text-muted); margin-top: 20px; }
+
+.pagination { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px; flex-wrap: wrap; }
+.page-btn { padding: 8px 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; }
+.page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.badge-success { background: rgba(16,185,129,0.15); color: var(--success); }
+.badge-danger { background: rgba(239,68,68,0.15); color: var(--danger); }
+.badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+.badge-info { background: rgba(6,182,212,0.15); color: var(--info); }
+.badge-purple { background: rgba(168,85,247,0.15); color: #a855f7; }
+
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+.sidebar-overlay.active { display: block; }
+
+.search-results-panel { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; max-height: 70vh; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 2000; display: none; overflow: hidden; }
+.search-results-panel.show { display: block; }
+.search-results-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+.search-results-body { max-height: calc(70vh - 60px); overflow-y: auto; padding: 12px; }
+.search-result-item { padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
+.search-result-item:hover { background: var(--bg); border-color: var(--accent); }
+.search-result-item .name { font-weight: 700; font-size: 14px; color: var(--text); }
+.search-result-item .meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-right: 4px solid var(--accent); padding: 16px 20px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 10003; display: none; animation: slideIn 0.3s ease; max-width: 320px; }
+.toast.show { display: block; }
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+.stats-table { width: 100%; border-collapse: collapse; }
+.stats-table th, .stats-table td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--border); font-size: 13px; }
+.stats-table th { background: var(--bg); font-weight: 700; color: var(--text-muted); }
+.stats-table tr:hover { background: rgba(79,70,229,0.05); }
+.stats-table .total-row { background: var(--bg); font-weight: 800; }
+
+/* ============================================
+   راهنمای کاربر (Onboarding Guide)
+   ============================================ */
+.guide-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(6px);
+  z-index: 12000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+.guide-overlay.show { display: flex; }
+.guide-modal {
+  background: var(--surface);
+  border-radius: 20px;
+  max-width: 820px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  animation: guideIn 0.4s ease;
+}
+@keyframes guideIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.guide-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.guide-header h2 {
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.guide-header .close-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+.guide-header .close-btn:hover { background: rgba(255,255,255,0.3); }
+
+.guide-steps {
+  display: flex;
+  gap: 6px;
+  padding: 16px 28px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.guide-step-dot {
+  flex: 1;
+  min-width: 60px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+.guide-step-dot.active { background: var(--accent); }
+.guide-step-dot.done { background: var(--success); }
+
+.guide-body {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+  line-height: 1.9;
+}
+.guide-body h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.guide-body h3 .step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.guide-body p {
+  font-size: 13.5px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.guide-body ul {
+  list-style: none;
+  margin: 12px 0 16px;
+}
+.guide-body ul li {
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.8;
+}
+.guide-body ul li::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.guide-body .info-box {
+  background: rgba(6,182,212,0.08);
+  border-right: 4px solid var(--info);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.9;
+}
+.guide-body .warn-box {
+  background: rgba(245,158,11,0.08);
+  border-right: 4px solid var(--warning);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.9;
+}
+.guide-body .success-box {
+  background: rgba(16,185,129,0.08);
+  border-right: 4px solid var(--success);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.9;
+}
+.guide-body .kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text);
+}
+.guide-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 12.5px;
+}
+.guide-body table th, .guide-body table td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: right;
+}
+.guide-body table th {
+  background: var(--bg);
+  font-weight: 700;
+}
+
+.guide-footer {
+  padding: 16px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.guide-footer .nav-btns { display: flex; gap: 8px; }
+.guide-footer button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid var(--border);
+}
+.guide-footer .btn-prev {
+  background: var(--surface);
+  color: var(--text);
+}
+.guide-footer .btn-prev:hover:not(:disabled) { background: var(--bg); }
+.guide-footer .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
+.guide-footer .btn-next {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.guide-footer .btn-next:hover { background: var(--accent-hover); }
+.guide-footer .btn-skip {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  font-size: 12px;
+}
+.guide-footer .btn-skip:hover { color: var(--text); }
+
+.guide-footer .dont-show {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.guide-footer .dont-show input { cursor: pointer; }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(100%); width: 280px; }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .main { margin-right: 0 !important; }
+  .topbar { padding: 12px; height: auto; min-height: 70px; flex-wrap: wrap; gap: 12px; }
+  .topbar-right, .topbar-left { width: 100%; justify-content: space-between; }
+  .global-search { max-width: none; order: 3; width: 100%; }
+  .upload-area { flex-wrap: wrap; width: 100%; }
+  .upload-btn { flex: 1; justify-content: center; min-height: 44px; font-size: 12px; padding: 10px 8px; }
+  .upload-btn span { display: none; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .guide-body { padding: 20px; }
+  .guide-header { padding: 18px 20px; }
+  .guide-footer { padding: 12px 20px; flex-wrap: wrap; }
+  .guide-footer .dont-show { order: 3; width: 100%; margin-top: 8px; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 20px; }
+  .guide-header h2 { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <span id="loading-text" style="font-size:14px; color:var(--text-muted); font-weight:600;">در حال پردازش...</span>
+  <div id="loading-progress" style="font-size: 12px; color: var(--text-muted); margin-top: 8px;"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- پنل جستجوی سراسری -->
+<div class="search-results-panel" id="search-results-panel">
+  <div class="search-results-header">
+    <strong id="search-results-count">نتایج جستجو</strong>
+    <button class="icon-btn" onclick="SearchEngine.closeResults()" style="width: 32px; height: 32px;"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="search-results-body" id="search-results-body"></div>
+</div>
+
+<!-- راهنمای کاربر (Onboarding Guide) -->
+<div class="guide-overlay" id="guide-overlay">
+  <div class="guide-modal">
+    <div class="guide-header">
+      <h2><i class="fas fa-graduation-cap"></i> راهنمای گام‌به‌گام استفاده</h2>
+      <button class="close-btn" onclick="Guide.close()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="guide-steps" id="guide-steps"></div>
+    <div class="guide-body" id="guide-body"></div>
+    <div class="guide-footer">
+      <div class="nav-btns">
+        <button class="btn-prev" id="guide-prev" onclick="Guide.prev()">
+          <i class="fas fa-chevron-right"></i> قبلی
+        </button>
+        <button class="btn-next" id="guide-next" onclick="Guide.next()">
+          بعدی <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <label class="dont-show">
+        <input type="checkbox" id="guide-dont-show">
+        <span>دیگر نشان نده</span>
+      </label>
+      <button class="btn-skip" onclick="Guide.close()">رد کردن راهنما</button>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-text">
+        آموزش و پرورش خوزستان
+        <small>تحلیل امور استخدامی</small>
+      </div>
+    </div>
+    <nav id="main-nav"></nav>
+    <div class="sidebar-footer">
+      <span>برنامه‌نویس: شرکت سانا ایده الکترونیک کرخه</span>
+      <span class="designer-name">مهندس سیدمحمدمهدی موسوی</span>
+      <a href="https://www.sanaide.ir" target="_blank" class="site-link">
+        <i class="fas fa-globe"></i> www.sanaide.ir
+      </a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-right">
+        <button id="toggle-sidebar" class="icon-btn"><i class="fas fa-bars"></i></button>
+        <h1 id="page-title" style="font-size: 16px; font-weight: 700;">داشبورد تحلیلی</h1>
+      </div>
+      
+      <div class="global-search">
+        <input type="text" id="global-search-input" placeholder="جستجوی پرسنل (نام، کدملی، شهرستان...)">
+        <i class="fas fa-search"></i>
+        <button class="clear-search" id="clear-search" onclick="SearchEngine.clearSearch()"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <div class="topbar-left">
+        <button id="guide-btn" class="icon-btn" title="راهنمای استفاده" style="color: #4f46e5; border-color: #4f46e5;">
+          <i class="fas fa-circle-question"></i>
+        </button>
+        <button id="export-excel" class="icon-btn" title="خروجی Excel" style="color: #059669; border-color: #059669;">
+          <i class="fas fa-file-excel"></i>
+        </button>
+        <button id="export-pdf" class="icon-btn" title="خروجی PDF" style="color: #ef4444; border-color: #ef4444;">
+          <i class="fas fa-file-pdf"></i>
+        </button>
+        <button id="print-btn" class="icon-btn" title="چاپ" style="color: #64748b; border-color: #64748b;">
+          <i class="fas fa-print"></i>
+        </button>
+        <button id="toggle-dark" class="icon-btn"><i class="fas fa-moon"></i></button>
+        <div class="upload-area">
+          <label for="staff-file" class="upload-btn staff" title="پرسنل موجود">
+            <i class="fas fa-users"></i>
+            <span>پرسنل موجود</span>
+          </label>
+          <input type="file" id="staff-file" accept=".xlsx,.xls" hidden>
+
+          <label for="results-file" class="upload-btn results" title="نتایج آزمون">
+            <i class="fas fa-clipboard-check"></i>
+            <span>نتایج آزمون</span>
+          </label>
+          <input type="file" id="results-file" accept=".xlsx,.xls" hidden>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div id="empty-state" class="empty-state">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 64px; margin-bottom: 16px; color: var(--accent); opacity: 0.4;"></i>
+        <p style="font-size: 16px; margin-bottom: 8px;">برای شروع، فایل‌های اکسل را بارگذاری کنید</p>
+        <p style="font-size: 13px;">ابتدا فایل «پرسنل موجود» و سپس فایل «نتایج آزمون» را آپلود نمایید</p>
+        <button onclick="Guide.open()" class="upload-btn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); margin-top: 20px;">
+          <i class="fas fa-circle-question"></i>
+          <span>مشاهده راهنمای گام‌به‌گام</span>
+        </button>
+      </div>
+      <div id="dashboard-content" style="display: none;">
+        <div id="dynamic-view"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// =============================================
+// STATE MANAGEMENT
+// =============================================
+const AppState = {
+  staffData: {},
+  resultsData: {},
+  staffIndex: new Map(),
+  resultsIndex: new Map(),
+  crossRefCache: null,
+  currentView: { type: 'dashboard', source: null, filters: {} },
+  charts: {},
+  pagination: { page: 1, perPage: 50 },
+  searchIndex: [],
+  globalSearchTerm: '',
+  currentTableData: [],
+  currentTableHeaders: []
+};
+
+// =============================================
+// UTILITIES
+// =============================================
+const Utils = {
+  showLoading(show, text = 'در حال پردازش...', progress = '') {
+    document.getElementById('loading-text').textContent = text;
+    document.getElementById('loading-progress').textContent = progress;
+    document.getElementById('loading').style.display = show ? 'flex' : 'none';
+  },
+  
+  showToast(msg, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.className = `toast show ${type}`;
+    toast.textContent = msg;
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  },
+  
+  toPersianNum(num) {
+    if (num === undefined || num === null || num === '') return '—';
+    return String(num).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+  },
+  
+  normalizeForSearch(str) {
+    return String(str)
+      .toLowerCase()
+      .replace(/ي/g, 'ی')
+      .replace(/ك/g, 'ک')
+      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+      .replace(/\s+/g, ' ')
+      .trim();
+  },
+  
+  normalizeNationalId(id) {
+    if (id === undefined || id === null || id === '') return '';
+    let str = String(id).trim()
+      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+      .replace(/[^0-9]/g, '');
+    if (str.length > 0 && str.length < 10) {
+      str = str.padStart(10, '0');
+    }
+    return str;
+  },
+  
+  findColumn(headers, patterns) {
+    for (const pattern of patterns) {
+      const col = headers.find(h => new RegExp(pattern, 'i').test(h));
+      if (col) return col;
+    }
+    return null;
+  },
+  
+  formatNumber(num) {
+    if (isNaN(num) || num === null || num === undefined) return '—';
+    return Number(num).toLocaleString('fa-IR');
+  },
+  
+  isIdColumn(colName) {
+    const idPatterns = [
+      'کدملی', 'کد ملی', 'کد ملي', 'nationalid', 'national_id',
+      'کد پرسنلی', 'کد پرسنلي', 'شماره پرسنلی', 'شماره پرسنلي',
+      'شماره شناسنامه', 'کد منطقه', 'تلفن', 'موبایل', 'کد پستی'
+    ];
+    return idPatterns.some(p => new RegExp(p, 'i').test(String(colName)));
+  },
+  
+  formatCellValue(value, colName) {
+    if (value === undefined || value === null || value === '') return '—';
+    const colStr = String(colName);
+    if (this.isIdColumn(colStr)) {
+      return String(value).trim().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    }
+    if (/تاریخ|تاريخ|date|تولد/i.test(colStr)) {
+      return String(value).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    }
+    if (typeof value === 'number' && !isNaN(value) && Number.isFinite(value)) {
+      return Number(value).toLocaleString('fa-IR');
+    }
+    return String(value);
+  },
+  
+  analyzeResultStatus(row) {
+    if (!row) return { isAccepted: false, isRejected: false, isOther: false, statusText: '', category: 'unknown' };
+    const statusColumns = [
+      'وضعیت نهایی نتیجه داوطلب', 'پیام عمومی نتیجه پایانی', 'وضعیت نهایی',
+      'وضعیت', 'پیام کارنامه', 'وضعیت نتیجه آزمون کتبی',
+      'وضعیت بررسی مدارک', 'وضعیت اعتراضات', 'وضعیت نهایی اعتراضات'
+    ];
+    const statusValues = [];
+    for (const col of statusColumns) {
+      for (const key of Object.keys(row)) {
+        if (key === col || key.includes(col) || col.includes(key)) {
+          const val = row[key];
+          if (val !== undefined && val !== null && String(val).trim() !== '') {
+            statusValues.push(String(val).trim());
+          }
+        }
+      }
+    }
+    const combinedStatus = statusValues.join(' | ');
+    const normalized = combinedStatus.replace(/\s+/g, ' ').replace(/ي/g, 'ی').replace(/ك/g, 'ک').trim();
+    const isAccepted = /پذیرفته\s*شده\s*نهایی/.test(normalized);
+    const isRejected = !isAccepted && /مردود|عدم\s*احراز|حذف\s*از\s*پردازش|عدم\s*واجد|فاقد\s*شرایط|رد\s*شده/.test(normalized);
+    const isOther = !isAccepted && !isRejected && /انصراف|غایب|عدم\s*حضور|در\s*حال\s*بررسی|شرکت\s*نکرده/.test(normalized);
+    return {
+      isAccepted, isRejected, isOther,
+      statusText: combinedStatus || 'نامشخص',
+      category: isAccepted ? 'accepted' : isRejected ? 'rejected' : isOther ? 'other' : 'unknown'
+    };
+  }
+};
+
+// =============================================
+// DATA PROCESSING
+// =============================================
+const DataProcessor = {
+  processFile(file, type, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        Utils.showLoading(true, `در حال خواندن فایل ${type}...`);
+        const wb = XLSX.read(e.target.result, { type: 'binary' });
+        const data = {};
+        wb.SheetNames.forEach((rawSheetName) => {
+          const sheetName = String(rawSheetName).trim();
+          try {
+            const sheet = wb.Sheets[rawSheetName];
+            const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+            data[sheetName] = rows;
+          } catch (err) {
+            console.error('Sheet error:', rawSheetName, err);
+            data[sheetName] = [];
+          }
+        });
+        if (type === 'staff') {
+          AppState.staffData = data;
+          this.buildStaffIndex();
+        } else {
+          AppState.resultsData = data;
+          this.buildResultsIndex();
+        }
+        this.buildSearchIndex();
+        AppState.crossRefCache = null;
+        Utils.showLoading(false);
+        callback(true);
+      } catch (err) {
+        Utils.showLoading(false);
+        Utils.showToast('خطا در خواندن فایل', 'error');
+        callback(false);
+      }
+    };
+    reader.readAsBinaryString(file);
+  },
+  
+  buildStaffIndex() {
+    AppState.staffIndex.clear();
+    Object.entries(AppState.staffData).forEach(([sheet, rows]) => {
+      if (!rows.length) return;
+      const headers = Object.keys(rows[0]);
+      const idCol = Utils.findColumn(headers, ['کدملی', 'کد ملي', 'کد ملی', 'nationalid', 'national_id']);
+      if (!idCol) return;
+      rows.forEach(row => {
+        const id = Utils.normalizeNationalId(row[idCol]);
+        if (id && id.length >= 8) {
+          const existing = AppState.staffIndex.get(id);
+          if (existing) {
+            existing._sheets = existing._sheets || [existing._sheet];
+            if (!existing._sheets.includes(sheet)) existing._sheets.push(sheet);
+          } else {
+            AppState.staffIndex.set(id, { ...row, _sheet: sheet, _type: 'staff', _sheets: [sheet] });
+          }
+        }
+      });
+    });
+  },
+  
+  buildResultsIndex() {
+    AppState.resultsIndex.clear();
+    Object.entries(AppState.resultsData).forEach(([sheet, rows]) => {
+      if (!rows.length) return;
+      const headers = Object.keys(rows[0]);
+      const idCol = Utils.findColumn(headers, ['کدملی', 'کد ملي', 'کد ملی', 'nationalid', 'national_id']);
+      if (!idCol) return;
+      rows.forEach(row => {
+        const id = Utils.normalizeNationalId(row[idCol]);
+        if (id && id.length >= 8) {
+          const existing = AppState.resultsIndex.get(id);
+          if (existing) {
+            existing._sheets = existing._sheets || [existing._sheet];
+            if (!existing._sheets.includes(sheet)) existing._sheets.push(sheet);
+          } else {
+            AppState.resultsIndex.set(id, { ...row, _sheet: sheet, _type: 'results', _sheets: [sheet] });
+          }
+        }
+      });
+    });
+  },
+  
+  buildSearchIndex() {
+    AppState.searchIndex = [];
+    AppState.staffIndex.forEach((row, id) => {
+      const name = row['نام'] || '';
+      const family = row['نام خانوادگي'] || row['نام خانوادگی'] || '';
+      const county = row['منطقه'] || row['شهرستان محل خدمت'] || row['شهرستان شغل'] || row['شهرستان'] || '';
+      const job = row['شغل'] || '';
+      const fatherName = row['نام پدر'] || '';
+      AppState.searchIndex.push({
+        type: 'staff', id: id,
+        name: `${name} ${family}`.trim(),
+        nationalId: id, county: county, job: job,
+        searchable: Utils.normalizeForSearch(`${name} ${family} ${id} ${county} ${job} ${fatherName}`),
+        row: row
+      });
+    });
+    AppState.resultsIndex.forEach((row, id) => {
+      if (!AppState.staffIndex.has(id)) {
+        const name = row['نام'] || '';
+        const family = row['نام خانوادگی'] || row['نام خانوادگي'] || '';
+        const county = row['شهرستان شغل'] || row['منطقه'] || row['شهرستان'] || '';
+        const job = row['شغل'] || '';
+        AppState.searchIndex.push({
+          type: 'results', id: id,
+          name: `${name} ${family}`.trim(),
+          nationalId: id, county: county, job: job,
+          searchable: Utils.normalizeForSearch(`${name} ${family} ${id} ${county} ${job}`),
+          row: row
+        });
+      }
+    });
+  },
+  
+  analyzeCrossReference() {
+    if (AppState.crossRefCache) return AppState.crossRefCache;
+    const result = {
+      accepted: [], rejected: [], other: [], ghost: [], withoutExam: [],
+      totalStaff: AppState.staffIndex.size,
+      totalResults: AppState.resultsIndex.size,
+      byRegion: {}
+    };
+    AppState.resultsIndex.forEach((resultRow, id) => {
+      const status = Utils.analyzeResultStatus(resultRow);
+      const inStaff = AppState.staffIndex.has(id);
+      const staffRow = AppState.staffIndex.get(id) || {};
+      if (status.isAccepted) {
+        if (inStaff) {
+          result.accepted.push({ ...staffRow, ...resultRow, _nationalId: id, _category: 'accepted', _statusText: status.statusText });
+        } else {
+          result.ghost.push({ ...resultRow, _nationalId: id, _category: 'ghost', _statusText: status.statusText, _reason: 'پذیرفته شده نهایی ولی در پرسنل ثبت نشده' });
+        }
+      } else if (status.isRejected) {
+        result.rejected.push({ ...(inStaff ? staffRow : {}), ...resultRow, _nationalId: id, _category: 'rejected', _statusText: status.statusText, _inStaff: inStaff });
+        if (inStaff) {
+          result.withoutExam.push({ ...staffRow, ...resultRow, _nationalId: id, _category: 'withoutExam', _reason: `در آزمون: ${status.statusText || 'مردود'}`, _statusText: status.statusText });
+        }
+      } else if (status.isOther) {
+        result.other.push({ ...(inStaff ? staffRow : {}), ...resultRow, _nationalId: id, _category: 'other', _statusText: status.statusText, _inStaff: inStaff });
+        if (inStaff) {
+          result.withoutExam.push({ ...staffRow, ...resultRow, _nationalId: id, _category: 'withoutExam', _reason: `در آزمون: ${status.statusText || 'وضعیت نامشخص'}`, _statusText: status.statusText });
+        }
+      }
+    });
+    const allStaff = Object.values(AppState.staffData).flat();
+    if (allStaff.length) {
+      const staffHeaders = Object.keys(allStaff[0]);
+      const regionCol = Utils.findColumn(staffHeaders, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county']);
+      if (regionCol) {
+        const regions = {};
+        allStaff.forEach(row => {
+          const region = row[regionCol] || 'نامشخص';
+          if (!regions[region]) regions[region] = { total: 0, accepted: 0, rejected: 0, other: 0, withoutExam: 0, ghost: 0 };
+          regions[region].total++;
+        });
+        result.accepted.forEach(r => { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].accepted++; });
+        result.rejected.forEach(r => { if (r._inStaff) { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].rejected++; } });
+        result.other.forEach(r => { if (r._inStaff) { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].other++; } });
+        result.withoutExam.forEach(r => { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].withoutExam++; });
+        const allResults = Object.values(AppState.resultsData).flat();
+        if (allResults.length) {
+          const resultRegionCol = Utils.findColumn(Object.keys(allResults[0]), ['شهرستان شغل', 'شهرستان', 'منطقه', 'county']);
+          if (resultRegionCol) {
+            result.ghost.forEach(r => { const region = r[resultRegionCol] || 'نامشخص'; if (regions[region]) regions[region].ghost++; });
+          }
+        }
+        result.byRegion = regions;
+      }
+    }
+    AppState.crossRefCache = result;
+    return result;
+  },
+  
+  aggregateByField(data, fieldName, topN = 20) {
+    const counts = {};
+    data.forEach(row => {
+      const val = row[fieldName];
+      if (val !== undefined && val !== '' && val !== null) counts[val] = (counts[val] || 0) + 1;
+    });
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, topN);
+  }
+};
+
+// =============================================
+// SEARCH ENGINE
+// =============================================
+const SearchEngine = {
+  init() {
+    const input = document.getElementById('global-search-input');
+    const clearBtn = document.getElementById('clear-search');
+    let debounceTimer;
+    input.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      const term = e.target.value.trim();
+      AppState.globalSearchTerm = term;
+      clearBtn.classList.toggle('show', term.length > 0);
+      if (term.length < 2) { this.closeResults(); return; }
+      debounceTimer = setTimeout(() => this.search(term), 300);
+    });
+    input.addEventListener('focus', () => {
+      if (AppState.globalSearchTerm.length >= 2) this.search(AppState.globalSearchTerm);
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.global-search') && !e.target.closest('.search-results-panel')) this.closeResults();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeResults();
+      if (e.key === '/' && !e.target.matches('input, textarea')) { e.preventDefault(); input.focus(); }
+    });
+  },
+  search(term) {
+    const normalizedTerm = Utils.normalizeForSearch(term);
+    if (AppState.searchIndex.length === 0) DataProcessor.buildSearchIndex();
+    const results = AppState.searchIndex.filter(item => item.searchable.includes(normalizedTerm) || item.nationalId.includes(normalizedTerm)).slice(0, 50);
+    this.showResults(results, term);
+  },
+  showResults(results, term) {
+    const panel = document.getElementById('search-results-panel');
+    const body = document.getElementById('search-results-body');
+    const count = document.getElementById('search-results-count');
+    if (results.length === 0) {
+      body.innerHTML = `<div style="padding: 30px; text-align: center; color: var(--text-muted);"><i class="fas fa-search" style="font-size: 32px; opacity: 0.3; margin-bottom: 12px;"></i><p>نتیجه‌ای برای «${term}» یافت نشد</p></div>`;
+      count.textContent = 'بدون نتیجه';
+      panel.classList.add('show');
+      return;
+    }
+    count.textContent = `${Utils.toPersianNum(results.length)} نتیجه یافت شد`;
+    body.innerHTML = results.map(item => {
+      const status = Utils.analyzeResultStatus(AppState.resultsIndex.get(item.id) || {});
+      const inStaff = AppState.staffIndex.has(item.id);
+      const inResults = AppState.resultsIndex.has(item.id);
+      let badge = '';
+      if (inStaff && inResults && status.isAccepted) badge = '<span class="badge badge-success">✅ شاغل/قبول</span>';
+      else if (inResults && !status.isAccepted) badge = '<span class="badge badge-danger">❌ قبول نشده</span>';
+      else if (inResults && status.isAccepted && !inStaff) badge = '<span class="badge badge-purple">👻 غایب</span>';
+      else if (inStaff && !inResults) badge = '<span class="badge badge-info">📋 در پرسنل (بدون آزمون)</span>';
+      return `
+        <div class="search-result-item" onclick="SearchEngine.goToRecord('${item.id}', '${item.type}')">
+          <div class="name">${item.name || 'بدون نام'} ${badge}</div>
+          <div class="meta">
+            <span><i class="fas fa-id-card"></i> ${Utils.toPersianNum(item.nationalId)}</span>
+            ${item.county ? `<span><i class="fas fa-map-marker-alt"></i> ${item.county}</span>` : ''}
+            ${item.job ? `<span><i class="fas fa-briefcase"></i> ${item.job}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+    panel.classList.add('show');
+  },
+  goToRecord(id, type) {
+    this.closeResults();
+    const row = type === 'staff' ? AppState.staffIndex.get(id) : AppState.resultsIndex.get(id);
+    if (!row) return;
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);';
+    const status = Utils.analyzeResultStatus(AppState.resultsIndex.get(id) || {});
+    const inStaff = AppState.staffIndex.has(id);
+    const inResults = AppState.resultsIndex.has(id);
+    let category = '';
+    if (inStaff && inResults && status.isAccepted) category = '✅ شاغل (پذیرفته شده نهایی ثبت‌شده)';
+    else if (inResults && !status.isAccepted && inStaff) category = '🚫 خارج از ضابطه';
+    else if (inResults && status.isAccepted && !inStaff) category = '👻 غایب';
+    else if (inStaff && !inResults) category = '📋 در پرسنل (بدون آزمون)';
+    else category = '⚠️ سایر';
+    const allData = { ...(AppState.staffIndex.get(id) || {}), ...(AppState.resultsIndex.get(id) || {}) };
+    modal.innerHTML = `
+      <div style="background: var(--surface); border-radius: var(--radius); max-width: 900px; width: 100%; max-height: 85vh; overflow: auto; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 18px; font-weight: 700;"><i class="fas fa-user" style="color: var(--accent); margin-left: 8px;"></i> ${allData['نام'] || ''} ${allData['نام خانوادگي'] || allData['نام خانوادگی'] || ''}</h3>
+          <button onclick="this.closest('div[style]').parentElement.remove()" class="icon-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+          <span class="badge badge-info" style="font-size: 13px; padding: 6px 12px;">وضعیت: ${category}</span>
+          <span class="badge" style="background: rgba(79,70,229,0.1); color: var(--accent); font-size: 13px; padding: 6px 12px;">کدملی: ${Utils.toPersianNum(id)}</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+          ${Object.entries(allData).filter(([k, v]) => !k.startsWith('_') && v).map(([k, v]) => `
+            <div style="padding: 10px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">${k}</div>
+              <div style="font-size: 13px; font-weight: 600; color: var(--text);">${Utils.formatCellValue(v, k)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+    document.body.appendChild(modal);
+  },
+  closeResults() { document.getElementById('search-results-panel').classList.remove('show'); },
+  clearSearch() {
+    const input = document.getElementById('global-search-input');
+    input.value = '';
+    AppState.globalSearchTerm = '';
+    document.getElementById('clear-search').classList.remove('show');
+    this.closeResults();
+  }
+};
+
+// =============================================
+// GUIDE
+// =============================================
+const Guide = {
+  currentStep: 0,
+  steps: [
+    { title: 'خوش‌آمدگویی', icon: 'fa-hand-sparkles', content: `
+      <p>به <strong>داشبورد تحلیل امور استخدامی</strong> اداره کل آموزش و پرورش استان خوزستان خوش آمدید.</p>
+      <p>این نرم‌افزار برای <strong>تطبیق دو مجموعه داده</strong> طراحی شده است:</p>
+      <ul>
+        <li><strong>فایل پرسنل موجود:</strong> شامل اطلاعات شاغلان فعلی</li>
+        <li><strong>فایل نتایج آزمون:</strong> شامل شرکت‌کنندگان و وضعیت نهایی آن‌ها</li>
+      </ul>
+      <div class="info-box"><i class="fas fa-info-circle"></i> با این راهنما در ۸ گام با تمام قابلیت‌های نرم‌افزار آشنا می‌شوید.</div>
+      <p>آماده‌اید؟ بیایید شروع کنیم! 🚀</p>
+    ` },
+    { title: 'بارگذاری فایل پرسنل', icon: 'fa-users', content: `
+      <p>ابتدا روی دکمه <strong style="color: #10b981;">«پرسنل موجود»</strong> کلیک کنید.</p>
+      <ul>
+        <li>فایل اکسل پرسنل را انتخاب کنید</li>
+        <li>فایل باید <strong>حداقل یک ستون کدملی</strong> داشته باشد</li>
+      </ul>
+      <div class="warn-box"><i class="fas fa-exclamation-triangle"></i> نام ستون کدملی می‌تواند «کدملی»، «کد ملی» یا «national_id» باشد.</div>
+    ` },
+    { title: 'بارگذاری فایل نتایج آزمون', icon: 'fa-clipboard-check', content: `
+      <p>سپس روی دکمه <strong style="color: #f59e0b;">«نتایج آزمون»</strong> کلیک کنید.</p>
+      <ul>
+        <li>فایل می‌تواند <strong>چندین شیت</strong> داشته باشد — همه پردازش می‌شوند</li>
+        <li>برای هر شیت، یک زیرمنو در سایدبار ساخته می‌شود</li>
+      </ul>
+      <div class="info-box"><i class="fas fa-lightbulb"></i> اگر فایل ۶ شیت داشته باشد، همه در منوی سمت راست نمایش داده می‌شوند.</div>
+    ` },
+    { title: 'داشبورد کلی', icon: 'fa-chart-pie', content: `
+      <p>پس از بارگذاری، وارد <strong>داشبورد کلی</strong> می‌شوید.</p>
+      <table>
+        <thead><tr><th>کارت</th><th>توضیح</th></tr></thead>
+        <tbody>
+          <tr><td>👥 پرسنل موجود</td><td>کل رکوردهای یونیک پرسنل</td></tr>
+          <tr><td>📋 شرکت‌کنندگان</td><td>کل رکوردهای یونیک نتایج</td></tr>
+          <tr><td>✅ شاغل</td><td>پذیرفته نهایی + در پرسنل</td></tr>
+          <tr><td>❌ مردودی</td><td>مردود در آزمون</td></tr>
+          <tr><td>⚠️ سایر</td><td>انصراف، غایب، در حال بررسی</td></tr>
+          <tr><td>👻 غایبین</td><td>پذیرفته نهایی بدون ثبت در پرسنل</td></tr>
+          <tr><td>🚫 خارج از ضابطه</td><td>در نتایج قبول نشده ولی در پرسنل</td></tr>
+        </tbody>
+      </table>
+    ` },
+    { title: 'کاوش در پرسنل و نتایج', icon: 'fa-table', content: `
+      <p>از منوی سمت راست هر شیت را جداگانه ببینید.</p>
+      <ul>
+        <li>با فیلترها و کادر جستجو رکورد خاص را پیدا کنید</li>
+        <li>صفحه‌بندی ۵۰ رکورد در هر صفحه فعال است</li>
+      </ul>
+      <div class="info-box"><i class="fas fa-search"></i> جستجو «ی/ي» و «ک/ك» عربی و فارسی را یکسان می‌بیند.</div>
+    ` },
+    { title: 'تحلیل تطبیقی', icon: 'fa-magnifying-glass-chart', content: `
+      <p>روی <strong>«تحلیل تطبیقی»</strong> کلیک کنید تا ۶ زیرمنو ببینید:</p>
+      <table>
+        <thead><tr><th>زیرمنو</th><th>توضیح</th></tr></thead>
+        <tbody>
+          <tr><td>✅ قبولی‌ها (شاغل)</td><td>پذیرفته نهایی + در پرسنل</td></tr>
+          <tr><td>❌ مردودی‌ها</td><td>مردود در آزمون</td></tr>
+          <tr><td>⚠️ سایر نتایج</td><td>انصراف، غایب، در حال بررسی</td></tr>
+          <tr><td>👻 غایبین</td><td>پذیرفته نهایی بدون ثبت در پرسنل</td></tr>
+          <tr><td>🚫 خارج از ضابطه</td><td>در نتایج قبول نشده ولی در پرسنل</td></tr>
+          <tr><td>📊 آمار منطقه‌ای</td><td>جدول و نمودار تفکیک منطقه</td></tr>
+        </tbody>
+      </table>
+      <div class="success-box"><i class="fas fa-check-circle"></i> معیار قبولی فقط <strong>«پذیرفته شده نهایی»</strong> است.</div>
+    ` },
+    { title: 'جستجوی سراسری', icon: 'fa-search', content: `
+      <p>در بالای صفحه یک <strong>کادر جستجوی سراسری</strong> وجود دارد.</p>
+      <ul>
+        <li>نام، نام خانوادگی، کدملی، شهرستان یا شغل را تایپ کنید</li>
+        <li>حداقل ۲ حرف لازم است</li>
+        <li>با کلیک روی هر نتیجه، پرونده کامل نمایش داده می‌شود</li>
+      </ul>
+      <div class="info-box"><i class="fas fa-keyboard"></i> با <span class="kbd">/</span> فوکوس روی جستجو، با <span class="kbd">Esc</span> بستن پنل.</div>
+    ` },
+    { title: 'خروجی و گزارش‌گیری', icon: 'fa-file-export', content: `
+      <p>سه دکمه خروجی در نوار بالا:</p>
+      <ul>
+        <li><strong style="color: #059669;">Excel:</strong> تمام شیت‌ها + تحلیل تطبیقی</li>
+        <li><strong style="color: #ef4444;">PDF:</strong> گزارش تصویری با نمودارها</li>
+        <li><strong style="color: #64748b;">چاپ:</strong> چاپ صفحه فعلی</li>
+      </ul>
+      <div class="info-box"><i class="fas fa-moon"></i> با دکمه ماه/خورشید بین حالت روشن و تاریک جابجا شوید.</div>
+      <p style="margin-top: 20px; text-align: center; font-weight: 700; color: var(--accent);">🎉 تبریک! با تمام قابلیت‌ها آشنا شدید.</p>
+    ` }
+  ],
+
+  init() {
+    this.renderDots();
+    this.renderStep();
+    document.getElementById('guide-dont-show').addEventListener('change', (e) => {
+      if (e.target.checked) localStorage.setItem('hideGuide', 'true');
+      else localStorage.removeItem('hideGuide');
+    });
+    if (!localStorage.getItem('hideGuide')) {
+      const hasData = Object.keys(AppState.staffData).length > 0 || Object.keys(AppState.resultsData).length > 0;
+      if (!hasData) setTimeout(() => this.open(), 800);
+    }
+  },
+  renderDots() {
+    const container = document.getElementById('guide-steps');
+    container.innerHTML = this.steps.map((_, i) => 
+      `<div class="guide-step-dot ${i === this.currentStep ? 'active' : i < this.currentStep ? 'done' : ''}" onclick="Guide.goTo(${i})" title="گام ${i + 1}"></div>`
+    ).join('');
+  },
+  renderStep() {
+    const step = this.steps[this.currentStep];
+    const body = document.getElementById('guide-body');
+    body.innerHTML = `
+      <h3>
+        <span class="step-num">${Utils.toPersianNum(this.currentStep + 1)}</span>
+        <i class="fas ${step.icon}" style="color: var(--accent);"></i>
+        ${step.title}
+      </h3>
+      ${step.content}
+    `;
+    body.scrollTop = 0;
+    document.getElementById('guide-prev').disabled = this.currentStep === 0;
+    const nextBtn = document.getElementById('guide-next');
+    if (this.currentStep === this.steps.length - 1) nextBtn.innerHTML = 'پایان <i class="fas fa-check"></i>';
+    else nextBtn.innerHTML = 'بعدی <i class="fas fa-chevron-left"></i>';
+    this.renderDots();
+  },
+  goTo(index) { this.currentStep = index; this.renderStep(); },
+  next() {
+    if (this.currentStep < this.steps.length - 1) { this.currentStep++; this.renderStep(); }
+    else this.close();
+  },
+  prev() { if (this.currentStep > 0) { this.currentStep--; this.renderStep(); } },
+  open() { this.currentStep = 0; this.renderStep(); document.getElementById('guide-overlay').classList.add('show'); },
+  close() { document.getElementById('guide-overlay').classList.remove('show'); }
+};
+
+// =============================================
+// UI RENDERING
+// =============================================
+const UI = {
+  initSidebar() {
+    const nav = document.getElementById('main-nav');
+    nav.innerHTML = '';
+    const menu = [
+      { id: 'dashboard', title: 'داشبورد کلی', icon: 'fa-chart-pie', type: 'dashboard' },
+      { id: 'staff', title: 'پرسنل موجود', icon: 'fa-users', type: 'parent',
+        children: Object.keys(AppState.staffData).map(s => ({
+          id: `staff-${s}`, title: s.trim(), type: 'staff-sheet', source: s,
+          count: (AppState.staffData[s] || []).length
+        }))
+      },
+      { id: 'results', title: 'نتایج آزمون', icon: 'fa-clipboard-check', type: 'parent',
+        children: Object.keys(AppState.resultsData).map(s => ({
+          id: `results-${s}`, title: s.trim(), type: 'results-sheet', source: s,
+          count: (AppState.resultsData[s] || []).length
+        }))
+      },
+      { id: 'analysis', title: 'تحلیل تطبیقی', icon: 'fa-magnifying-glass-chart', type: 'parent',
+        children: [
+          { id: 'cross-accepted', title: '✅ قبولی‌ها (شاغل)', type: 'cross', source: 'accepted' },
+          { id: 'cross-rejected', title: '❌ مردودی‌ها', type: 'cross', source: 'rejected' },
+          { id: 'cross-other', title: '⚠️ سایر نتایج', type: 'cross', source: 'other' },
+          { id: 'cross-ghost', title: '👻 غایبین', type: 'cross', source: 'ghost' },
+          { id: 'cross-noexam', title: '🚫 خارج از ضابطه', type: 'cross', source: 'withoutExam' },
+          { id: 'cross-region', title: '📊 آمار منطقه‌ای', type: 'cross', source: 'byRegion' }
+        ]
+      }
+    ];
+    menu.forEach(item => {
+      if (item.type === 'parent') {
+        if (!item.children || item.children.length === 0) return;
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn has-submenu';
+        btn.innerHTML = `<span class="icon"><i class="fas ${item.icon}"></i></span><span class="label">${item.title}</span><i class="fas fa-chevron-down submenu-arrow"></i>`;
+        const sub = document.createElement('div');
+        sub.className = 'submenu';
+        item.children.forEach(child => {
+          const subBtn = document.createElement('button');
+          subBtn.className = 'nav-btn sub-btn';
+          const countHtml = child.count !== undefined ? `<span class="record-count">${Utils.toPersianNum(child.count)}</span>` : '';
+          subBtn.innerHTML = `<span>${child.title}</span>${countHtml}`;
+          subBtn.onclick = (e) => { e.stopPropagation(); this.handleNavClick(child, subBtn); };
+          sub.appendChild(subBtn);
+        });
+        btn.onclick = () => {
+          const isOpen = sub.classList.contains('open');
+          sub.classList.toggle('open', !isOpen);
+          btn.classList.toggle('open', !isOpen);
+        };
+        sub.classList.add('open');
+        btn.classList.add('open');
+        nav.appendChild(btn);
+        nav.appendChild(sub);
+      } else {
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn';
+        btn.innerHTML = `<span class="icon"><i class="fas ${item.icon}"></i></span><span class="label">${item.title}</span>`;
+        btn.onclick = () => this.handleNavClick(item, btn);
+        nav.appendChild(btn);
+      }
+    });
+  },
+  
+  handleNavClick(item, btn) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById('page-title').textContent = item.title;
+    AppState.currentView = { type: item.type, source: item.source, filters: {} };
+    AppState.pagination.page = 1;
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('mobile-open');
+      document.getElementById('sidebar-overlay').classList.remove('active');
+    }
+    Utils.showLoading(true);
+    setTimeout(() => {
+      try {
+        if (item.type === 'dashboard') this.renderDashboard();
+        else if (item.type === 'staff-sheet') this.renderStaffSheet(item.source);
+        else if (item.type === 'results-sheet') this.renderResultsSheet(item.source);
+        else if (item.type === 'cross') {
+          if (item.source === 'byRegion') this.renderRegionStats();
+          else this.renderCrossAnalysis(item.source);
+        }
+      } catch (e) {
+        console.error('Render error:', e);
+        Utils.showToast('خطا در بارگذاری: ' + e.message, 'error');
+      }
+      Utils.showLoading(false);
+    }, 50);
+  },
+  
+  renderDashboard() {
+    const container = document.getElementById('dynamic-view');
+    const crossRef = DataProcessor.analyzeCrossReference();
+    const totalStaff = AppState.staffIndex.size;
+    const totalResults = AppState.resultsIndex.size;
+    const allStaff = Object.values(AppState.staffData).flat();
+    const firstStaff = allStaff[0] || {};
+    const staffHeaders = Object.keys(firstStaff);
+    const genderCol = Utils.findColumn(staffHeaders, ['جنسیت', 'جنسيت', 'gender']);
+    const countyCol = Utils.findColumn(staffHeaders, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county']);
+    const genderDist = genderCol ? DataProcessor.aggregateByField(allStaff, genderCol, 5) : [];
+    const countyDist = countyCol ? DataProcessor.aggregateByField(allStaff, countyCol, 20) : [];
+    const employed = crossRef.accepted.length;
+    const employmentRate = totalStaff > 0 ? ((employed / totalStaff) * 100).toFixed(1) : 0;
+    container.innerHTML = `
+      <div class="kpi-grid">
+        <div class="kpi-card cyan"><div class="kpi-icon cyan"><i class="fas fa-users"></i></div><div class="kpi-content"><div class="kpi-label">کل پرسنل موجود</div><div class="kpi-value">${Utils.formatNumber(totalStaff)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> ${Object.keys(AppState.staffData).length} شیت</div></div></div>
+        <div class="kpi-card green"><div class="kpi-icon green"><i class="fas fa-clipboard-list"></i></div><div class="kpi-content"><div class="kpi-label">کل شرکت‌کنندگان آزمون</div><div class="kpi-value">${Utils.formatNumber(totalResults)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> ${Object.keys(AppState.resultsData).length} شیت</div></div></div>
+        <div class="kpi-card green"><div class="kpi-icon green"><i class="fas fa-user-check"></i></div><div class="kpi-content"><div class="kpi-label">شاغل (پذیرفته شده نهایی ثبت‌شده)</div><div class="kpi-value">${Utils.formatNumber(employed)}</div><div class="kpi-trend" style="color: var(--success);"><i class="fas fa-arrow-up"></i> ${Utils.toPersianNum(employmentRate)}٪</div></div></div>
+        <div class="kpi-card red"><div class="kpi-icon red"><i class="fas fa-user-times"></i></div><div class="kpi-content"><div class="kpi-label">مردودی‌ها</div><div class="kpi-value">${Utils.formatNumber(crossRef.rejected.length)}</div></div></div>
+        <div class="kpi-card orange"><div class="kpi-icon orange"><i class="fas fa-question-circle"></i></div><div class="kpi-content"><div class="kpi-label">سایر نتایج</div><div class="kpi-value">${Utils.formatNumber(crossRef.other.length)}</div></div></div>
+        <div class="kpi-card purple"><div class="kpi-icon purple"><i class="fas fa-ghost"></i></div><div class="kpi-content"><div class="kpi-label">غایبین</div><div class="kpi-value">${Utils.formatNumber(crossRef.ghost.length)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> پذیرفته نهایی، بدون ثبت در پرسنل</div></div></div>
+        <div class="kpi-card orange"><div class="kpi-icon orange"><i class="fas fa-user-slash"></i></div><div class="kpi-content"><div class="kpi-label">خارج از ضابطه</div><div class="kpi-value">${Utils.formatNumber(crossRef.withoutExam.length)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> در نتایج قبول نشده ولی در پرسنل هست</div></div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><h4><i class="fas fa-venus-mars"></i> توزیع جنسیت پرسنل</h4><canvas id="chart-gender"></canvas></div>
+        <div class="chart-card"><h4><i class="fas fa-chart-pie"></i> وضعیت استخدامی</h4><canvas id="chart-status"></canvas></div>
+      </div>
+      ${countyCol ? `<div class="section-card"><div class="card-header"><h3><i class="fas fa-map-marked-alt" style="color: var(--accent);"></i> توزیع شهرستانی پرسنل</h3></div><div style="padding: 20px; height: 400px;"><canvas id="chart-county"></canvas></div></div>` : ''}
+    `;
+    this.renderChart('chart-gender', 'doughnut', genderDist.map(g => g[0]), genderDist.map(g => g[1]), ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#06b6d4']);
+    this.renderChart('chart-status', 'pie', ['شاغل', 'مردود', 'سایر', 'غایبین', 'خارج از ضابطه'], [crossRef.accepted.length, crossRef.rejected.length, crossRef.other.length, crossRef.ghost.length, crossRef.withoutExam.length], ['#10b981', '#ef4444', '#f59e0b', '#a855f7', '#64748b']);
+    if (countyCol) this.renderChart('chart-county', 'bar', countyDist.map(c => c[0]), countyDist.map(c => c[1]), '#06b6d4');
+  },
+  
+  renderStaffSheet(sheetName) {
+    const container = document.getElementById('dynamic-view');
+    const rows = AppState.staffData[sheetName] || [];
+    if (!rows.length) { container.innerHTML = '<div class="empty-state">داده‌ای یافت نشد</div>'; return; }
+    const headers = Object.keys(rows[0]);
+    const countyCol = Utils.findColumn(headers, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان', 'county']);
+    const genderCol = Utils.findColumn(headers, ['جنسیت', 'جنسيت', 'gender']);
+    AppState.currentTableData = rows;
+    AppState.currentTableHeaders = headers;
+    container.innerHTML = `
+      <div class="filter-row">
+        ${countyCol ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(rows.map(r => r[countyCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
+        ${genderCol ? `<select class="filter-select" id="filter-gender" onchange="UI.applyTableFilters()"><option value="">همه جنسیت‌ها</option>${[...new Set(rows.map(r => r[genderCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
+        <input type="text" class="filter-input" id="table-search" placeholder="جستجو (نام، کدملی)..." onkeyup="UI.applyTableFilters()">
+        <span style="font-size: 12px; color: var(--text-muted); margin-right: auto;" id="record-count">${Utils.formatNumber(rows.length)} رکورد</span>
+      </div>
+      <div class="charts-grid">
+        ${genderCol ? '<div class="chart-card"><h4><i class="fas fa-venus-mars"></i> جنسیت</h4><canvas id="sheet-gender"></canvas></div>' : ''}
+        ${countyCol ? '<div class="chart-card"><h4><i class="fas fa-map"></i> شهرستان‌ها</h4><canvas id="sheet-county"></canvas></div>' : ''}
+      </div>
+      <div class="section-card">
+        <div class="card-header"><h3><i class="fas fa-table" style="color: var(--accent);"></i> جدول پرسنل - ${sheetName}</h3></div>
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;"><table class="data-table" id="main-table"></table></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    `;
+    if (genderCol) { const dist = DataProcessor.aggregateByField(rows, genderCol, 5); this.renderChart('sheet-gender', 'doughnut', dist.map(d => d[0]), dist.map(d => d[1]), ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#06b6d4']); }
+    if (countyCol) { const dist = DataProcessor.aggregateByField(rows, countyCol, 15); this.renderChart('sheet-county', 'bar', dist.map(d => d[0]), dist.map(d => d[1]), '#06b6d4'); }
+    this.renderTableData(rows, headers);
+  },
+  
+  renderResultsSheet(sheetName) {
+    const container = document.getElementById('dynamic-view');
+    const rows = AppState.resultsData[sheetName] || [];
+    if (!rows.length) { container.innerHTML = '<div class="empty-state">داده‌ای یافت نشد</div>'; return; }
+    const headers = Object.keys(rows[0]);
+    const statusCol = Utils.findColumn(headers, ['وضعیت', 'وضعیت نهایی', 'نتیجه', 'status', 'پیام عمومی']);
+    const countyCol = Utils.findColumn(headers, ['شهرستان شغل', 'شهرستان', 'county', 'منطقه']);
+    AppState.currentTableData = rows;
+    AppState.currentTableHeaders = headers;
+    container.innerHTML = `
+      <div class="filter-row">
+        ${statusCol ? `<select class="filter-select" id="filter-status" onchange="UI.applyTableFilters()"><option value="">همه وضعیت‌ها</option>${[...new Set(rows.map(r => r[statusCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
+        ${countyCol ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(rows.map(r => r[countyCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
+        <input type="text" class="filter-input" id="table-search" placeholder="جستجو..." onkeyup="UI.applyTableFilters()">
+        <span style="font-size: 12px; color: var(--text-muted); margin-right: auto;" id="record-count">${Utils.formatNumber(rows.length)} رکورد</span>
+      </div>
+      <div class="section-card">
+        <div class="card-header"><h3><i class="fas fa-table" style="color: var(--accent);"></i> جدول نتایج - ${sheetName}</h3></div>
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;"><table class="data-table" id="main-table"></table></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    `;
+    this.renderTableData(rows, headers);
+  },
+  
+  renderCrossAnalysis(type) {
+    const container = document.getElementById('dynamic-view');
+    const crossRef = DataProcessor.analyzeCrossReference();
+    const data = crossRef[type] || [];
+    const titles = {
+      accepted: '✅ قبولی‌های ثبت‌شده (شاغل)',
+      rejected: '❌ مردودی‌های آزمون',
+      other: '⚠️ سایر وضعیت‌ها',
+      ghost: '👻 غایبین (پذیرفته شده نهایی ولی بدون ثبت در پرسنل)',
+      withoutExam: '🚫 خارج از ضابطه (در نتایج قبول نشده ولی در پرسنل هست)'
+    };
+    const descriptions = {
+      accepted: 'افرادی که هم در فایل پرسنل ثبت شده‌اند و هم وضعیت نهایی آن‌ها در آزمون «پذیرفته شده نهایی» است',
+      rejected: 'افرادی که در آزمون مردود شده‌اند (چه در پرسنل باشند چه نباشند)',
+      other: 'افرادی که وضعیت آن‌ها انصراف، غایب یا در حال بررسی است',
+      ghost: 'افرادی که در آزمون «پذیرفته شده نهایی» هستند ولی در لیست پرسنل فعلی ثبت نشده‌اند',
+      withoutExam: 'افرادی که در فایل نتایج حضور دارند، وضعیت آن‌ها «پذیرفته شده نهایی» نیست، اما در فایل پرسنل ثبت شده‌اند'
+    };
+    const headers = data.length ? Object.keys(data[0]).filter(h => !h.startsWith('_')) : [];
+    const countyField = Utils.findColumn(headers, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county']);
+    AppState.currentTableData = data;
+    AppState.currentTableHeaders = headers;
+    const cardColor = type === 'accepted' ? 'green' : type === 'rejected' ? 'red' : type === 'ghost' ? 'purple' : 'orange';
+    const iconName = type === 'accepted' ? 'check-circle' : type === 'rejected' ? 'times-circle' : type === 'ghost' ? 'ghost' : 'user-slash';
+    container.innerHTML = `
+      <div class="kpi-grid">
+        <div class="kpi-card ${cardColor}"><div class="kpi-icon ${cardColor}"><i class="fas fa-${iconName}"></i></div><div class="kpi-content"><div class="kpi-label">تعداد کل</div><div class="kpi-value">${Utils.formatNumber(data.length)}</div><div class="kpi-trend">${titles[type]}</div></div></div>
+      </div>
+      <div class="section-card" style="margin-bottom: 20px;"><div style="padding: 16px 20px; background: var(--bg); border-bottom: 1px solid var(--border);"><p style="font-size: 13px; color: var(--text-muted); line-height: 1.8;"><i class="fas fa-info-circle" style="color: var(--accent); margin-left: 6px;"></i>${descriptions[type]}</p></div></div>
+      <div class="section-card">
+        <div class="card-header"><h3><i class="fas fa-list" style="color: var(--accent);"></i> ${titles[type]}</h3><button class="page-btn" onclick="UI.exportCurrentData('${type}')"><i class="fas fa-file-excel"></i> خروجی Excel</button></div>
+        <div class="filter-row" style="margin: 16px;">
+          ${countyField ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(data.map(r => r[countyField]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
+          <input type="text" class="filter-input" id="table-search" placeholder="جستجو (نام/کدملی)..." onkeyup="UI.applyTableFilters()">
+          <span style="font-size: 12px; color: var(--text-muted); margin-right: auto;" id="record-count">${Utils.formatNumber(data.length)} رکورد</span>
+        </div>
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;"><table class="data-table" id="main-table"></table></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    `;
+    this.renderTableData(data, headers);
+  },
+  
+  renderRegionStats() {
+    const container = document.getElementById('dynamic-view');
+    const crossRef = DataProcessor.analyzeCrossReference();
+    const byRegion = crossRef.byRegion;
+    if (!byRegion || Object.keys(byRegion).length === 0) { container.innerHTML = '<div class="empty-state">داده‌ای برای نمایش وجود ندارد</div>'; return; }
+    const sortedRegions = Object.entries(byRegion).sort((a, b) => b[1].total - a[1].total);
+    const totalAll = Object.values(byRegion).reduce((sum, r) => sum + r.total, 0);
+    container.innerHTML = `
+      <div class="section-card">
+        <div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--accent);"></i> آمار پرسنل به تفکیک منطقه</h3></div>
+        <div class="table-responsive">
+          <table class="stats-table">
+            <thead><tr><th>ردیف</th><th>منطقه/شهرستان</th><th>پرسنل کل</th><th>قبولی ثبت‌شده</th><th>مردود (در پرسنل)</th><th>سایر (در پرسنل)</th><th>خارج از ضابطه</th><th>غایب</th><th>درصد قبولی</th></tr></thead>
+            <tbody>
+              ${sortedRegions.map(([region, stats], idx) => `
+                <tr><td>${Utils.toPersianNum(idx + 1)}</td><td>${region}</td><td><strong>${Utils.formatNumber(stats.total)}</strong></td><td style="color: var(--success); font-weight: 600;">${Utils.formatNumber(stats.accepted)}</td><td style="color: var(--danger); font-weight: 600;">${Utils.formatNumber(stats.rejected)}</td><td style="color: var(--warning); font-weight: 600;">${Utils.formatNumber(stats.other)}</td><td style="color: #64748b; font-weight: 600;">${Utils.formatNumber(stats.withoutExam)}</td><td style="color: #a855f7; font-weight: 600;">${Utils.formatNumber(stats.ghost)}</td><td>${stats.total > 0 ? Utils.toPersianNum(((stats.accepted / stats.total) * 100).toFixed(1)) + '٪' : '—'}</td></tr>
+              `).join('')}
+              <tr class="total-row"><td colspan="2">جمع کل</td><td>${Utils.formatNumber(totalAll)}</td><td>${Utils.formatNumber(crossRef.accepted.length)}</td><td>${Utils.formatNumber(crossRef.rejected.filter(r => r._inStaff).length)}</td><td>${Utils.formatNumber(crossRef.other.filter(r => r._inStaff).length)}</td><td>${Utils.formatNumber(crossRef.withoutExam.length)}</td><td>${Utils.formatNumber(crossRef.ghost.length)}</td><td>${totalAll > 0 ? Utils.toPersianNum(((crossRef.accepted.length / totalAll) * 100).toFixed(1)) + '٪' : '—'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="section-card"><div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--accent);"></i> نمودار توزیع منطقه‌ای</h3></div><div style="padding: 20px; height: 400px;"><canvas id="chart-region"></canvas></div></div>
+    `;
+    this.renderChart('chart-region', 'bar', sortedRegions.slice(0, 20).map(r => r[0]), sortedRegions.slice(0, 20).map(r => r[1].total), '#4f46e5');
+  },
+  
+  renderTableData(rows, headers) {
+    const filtered = this.getFilteredData(rows, headers);
+    const { page, perPage } = AppState.pagination;
+    const start = (page - 1) * perPage;
+    const pageData = filtered.slice(start, start + perPage);
+    const totalPages = Math.ceil(filtered.length / perPage);
+    const countEl = document.getElementById('record-count');
+    if (countEl) countEl.textContent = `${Utils.formatNumber(filtered.length)} رکورد`;
+    const table = document.getElementById('main-table');
+    if (!table) return;
+    const displayHeaders = headers.filter(h => !h.startsWith('_'));
+    let html = '<thead><tr><th>#</th>';
+    displayHeaders.forEach(h => html += `<th>${h}</th>`);
+    html += '</tr></thead><tbody>';
+    if (pageData.length === 0) {
+      html += `<tr><td colspan="${displayHeaders.length + 1}" style="text-align: center; padding: 30px; color: var(--text-muted);">رکوردی یافت نشد</td></tr>`;
+    } else {
+      pageData.forEach((row, idx) => {
+        html += '<tr>';
+        html += `<td>${Utils.toPersianNum(start + idx + 1)}</td>`;
+        displayHeaders.forEach(h => { html += `<td>${Utils.formatCellValue(row[h], h)}</td>`; });
+        html += '</tr>';
+      });
+    }
+    html += '</tbody>';
+    table.innerHTML = html;
+    this.renderPagination(totalPages);
+  },
+  
+  getFilteredData(rows, headers) {
+    let filtered = [...rows];
+    const searchEl = document.getElementById('table-search');
+    if (searchEl && searchEl.value.trim()) {
+      const term = Utils.normalizeForSearch(searchEl.value);
+      filtered = filtered.filter(row => {
+        for (const key of Object.keys(row)) {
+          if (key.startsWith('_')) continue;
+          const val = row[key];
+          if (val === undefined || val === null) continue;
+          let valStr = Utils.isIdColumn(key) ? Utils.normalizeNationalId(val) : Utils.normalizeForSearch(val);
+          if (valStr.includes(term)) return true;
+        }
+        return false;
+      });
+    }
+    const countyEl = document.getElementById('filter-county');
+    if (countyEl && countyEl.value) {
+      const countyCols = ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county'];
+      filtered = filtered.filter(row => {
+        const col = Object.keys(row).find(h => countyCols.some(c => new RegExp(c, 'i').test(h)));
+        return col && String(row[col]) === countyEl.value;
+      });
+    }
+    const genderEl = document.getElementById('filter-gender');
+    if (genderEl && genderEl.value) {
+      const genderCols = ['جنسیت', 'جنسيت', 'gender'];
+      filtered = filtered.filter(row => {
+        const col = Object.keys(row).find(h => genderCols.some(c => new RegExp(c, 'i').test(h)));
+        return col && String(row[col]) === genderEl.value;
+      });
+    }
+    const statusEl = document.getElementById('filter-status');
+    if (statusEl && statusEl.value) {
+      const statusCols = ['وضعیت', 'وضعیت نهایی', 'نتیجه', 'status', 'پیام عمومی'];
+      filtered = filtered.filter(row => {
+        const col = Object.keys(row).find(h => statusCols.some(c => new RegExp(c, 'i').test(h)));
+        return col && String(row[col]) === statusEl.value;
+      });
+    }
+    return filtered;
+  },
+  
+  applyTableFilters() {
+    AppState.pagination.page = 1;
+    const rows = AppState.currentTableData;
+    const headers = AppState.currentTableHeaders;
+    if (rows && headers) this.renderTableData(rows, headers);
+  },
+  
+  renderChart(id, type, labels, data, colors, extraOpts = {}) {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    if (AppState.charts[id]) AppState.charts[id].destroy();
+    const isDark = document.body.classList.contains('dark');
+    const textColor = isDark ? '#f1f5f9' : '#0f172a';
+    const options = {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: type !== 'bar', position: 'bottom', labels: { color: textColor, font: { family: 'Vazirmatn', size: 11 } } },
+        tooltip: { titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' } }
+      },
+      scales: type === 'doughnut' || type === 'pie' ? {} : {
+        x: { ticks: { color: textColor, font: { family: 'Vazirmatn', size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: textColor, font: { family: 'Vazirmatn', size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      },
+      ...extraOpts
+    };
+    const dataset = {
+      data,
+      backgroundColor: Array.isArray(colors) ? colors : new Array(labels.length).fill(colors),
+      borderColor: isDark ? '#151d2e' : '#ffffff',
+      borderWidth: 2
+    };
+    AppState.charts[id] = new Chart(canvas, { type, data: { labels, datasets: [dataset] }, options });
+  },
+  
+  renderPagination(totalPages) {
+    const pag = document.getElementById('pagination');
+    if (!pag) return;
+    const { page } = AppState.pagination;
+    let html = '';
+    html += `<button class="page-btn" onclick="UI.goToPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>قبلی</button>`;
+    const maxButtons = 5;
+    let startPage = Math.max(1, page - 2);
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    if (endPage - startPage < maxButtons - 1) startPage = Math.max(1, endPage - maxButtons + 1);
+    if (startPage > 1) {
+      html += `<button class="page-btn" onclick="UI.goToPage(1)">۱</button>`;
+      if (startPage > 2) html += '<span style="padding: 0 8px;">...</span>';
+    }
+    for (let i = startPage; i <= endPage; i++) {
+      html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="UI.goToPage(${i})">${Utils.toPersianNum(i)}</button>`;
+    }
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) html += '<span style="padding: 0 8px;">...</span>';
+      html += `<button class="page-btn" onclick="UI.goToPage(${totalPages})">${Utils.toPersianNum(totalPages)}</button>`;
+    }
+    html += `<button class="page-btn" onclick="UI.goToPage(${page + 1})" ${page === totalPages ? 'disabled' : ''}>بعدی</button>`;
+    html += `<span style="margin-right: 12px; font-size: 12px; color: var(--text-muted);">صفحه ${Utils.toPersianNum(page)} از ${Utils.toPersianNum(totalPages)}</span>`;
+    pag.innerHTML = html;
+  },
+  
+  goToPage(page) {
+    AppState.pagination.page = page;
+    const rows = AppState.currentTableData;
+    const headers = AppState.currentTableHeaders;
+    if (rows && headers) this.renderTableData(rows, headers);
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  },
+  
+  exportCurrentData(type) {
+    const data = AppState.currentTableData || [];
+    if (!data.length) return Utils.showToast('داده‌ای برای خروجی وجود ندارد', 'error');
+    const cleanData = data.map(row => { const clean = {}; Object.keys(row).forEach(k => { if (!k.startsWith('_')) clean[k] = row[k]; }); return clean; });
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cleanData), type.substring(0, 31));
+    XLSX.writeFile(wb, `${type}_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
+    Utils.showToast('فایل Excel ایجاد شد', 'success');
+  }
+};
+
+// =============================================
+// EXPORT FUNCTIONS
+// =============================================
+const ExportManager = {
+  toExcel() {
+    Utils.showLoading(true, 'ایجاد فایل Excel...');
+    setTimeout(() => {
+      try {
+        const wb = XLSX.utils.book_new();
+        const today = new Date().toLocaleDateString('fa-IR');
+        Object.entries(AppState.staffData).forEach(([sheet, rows]) => {
+          if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), `پرسنل-${sheet}`.substring(0, 31));
+        });
+        Object.entries(AppState.resultsData).forEach(([sheet, rows]) => {
+          if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), `نتایج-${sheet}`.substring(0, 31));
+        });
+        const crossRef = DataProcessor.analyzeCrossReference();
+        const labels = { accepted: 'قبولی‌ها', rejected: 'مردودی‌ها', other: 'سایر', ghost: 'غایبین', withoutExam: 'خارج_از_ضابطه' };
+        ['accepted', 'rejected', 'other', 'ghost', 'withoutExam'].forEach(type => {
+          if (crossRef[type].length) {
+            const clean = crossRef[type].map(r => { const c = {}; Object.keys(r).forEach(k => { if (!k.startsWith('_')) c[k] = r[k]; }); return c; });
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(clean), labels[type].substring(0, 31));
+          }
+        });
+        XLSX.writeFile(wb, `تحلیل_استخدامی_${today}.xlsx`);
+        Utils.showToast('فایل Excel با موفقیت ایجاد شد', 'success');
+      } catch (e) { Utils.showToast('خطا در ایجاد فایل', 'error'); }
+      Utils.showLoading(false);
+    }, 100);
+  },
+  async toPDF() {
+    Utils.showLoading(true, 'ایجاد PDF...');
+    await new Promise(r => setTimeout(r, 100));
+    try {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const headerDiv = document.createElement('div');
+      headerDiv.style.cssText = 'width: 210mm; padding: 10mm; text-align: center; font-family: Vazirmatn; direction: rtl; background: white; position: absolute; top: -9999px;';
+      headerDiv.innerHTML = `<h2 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0;">داشبورد تحلیل امور استخدامی</h2><p style="font-size: 12px; color: #4f46e5; margin-top: 4px;">اداره کل آموزش و پرورش استان خوزستان</p><p style="font-size: 10px; color: #64748b; margin-top: 2px;">تاریخ: ${new Date().toLocaleDateString('fa-IR')}</p>`;
+      document.body.appendChild(headerDiv);
+      const headerCanvas = await html2canvas(headerDiv, { scale: 2, backgroundColor: '#fff' });
+      pdf.addImage(headerCanvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 30);
+      document.body.removeChild(headerDiv);
+      const chartIds = Object.keys(AppState.charts).slice(0, 6);
+      let y = 35;
+      for (let i = 0; i < chartIds.length; i++) {
+        const canvas = document.getElementById(chartIds[i]);
+        if (canvas) {
+          const imgData = canvas.toDataURL('image/png', 1.0);
+          const x = (i % 2) * 100 + 5;
+          const yy = y + Math.floor(i / 2) * 75;
+          pdf.addImage(imgData, 'PNG', x, yy, 95, 70);
+        }
+      }
+      pdf.save('گزارش_استخدامی_خوزستان.pdf');
+      Utils.showToast('PDF ایجاد شد', 'success');
+    } catch (e) { Utils.showToast('خطا در ایجاد PDF', 'error'); }
+    Utils.showLoading(false);
+  },
+  print() { window.print(); }
+};
+
+// =============================================
+// INITIALIZATION
+// =============================================
+function checkDataReady() {
+  const hasStaff = Object.keys(AppState.staffData).length > 0;
+  const hasResults = Object.keys(AppState.resultsData).length > 0;
+  const hasData = hasStaff || hasResults;
+  document.getElementById('empty-state').style.display = hasData ? 'none' : 'block';
+  document.getElementById('dashboard-content').style.display = hasData ? 'block' : 'none';
+  if (hasData) {
+    if (hasStaff) DataProcessor.buildStaffIndex();
+    if (hasResults) DataProcessor.buildResultsIndex();
+    DataProcessor.buildSearchIndex();
+    AppState.crossRefCache = null;
+    UI.initSidebar();
+    const dbBtn = document.querySelector('.nav-btn');
+    if (dbBtn) UI.handleNavClick({ type: 'dashboard', title: 'داشبورد کلی' }, dbBtn);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Guide.init();
+  document.getElementById('guide-btn').onclick = () => Guide.open();
+  document.getElementById('staff-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    DataProcessor.processFile(file, 'staff', (success) => {
+      if (success) {
+        Utils.showToast(`فایل پرسنل بارگذاری شد (${AppState.staffIndex.size} رکورد)`, 'success');
+        checkDataReady();
+      }
+    });
+  });
+  document.getElementById('results-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    DataProcessor.processFile(file, 'results', (success) => {
+      if (success) {
+        Utils.showToast(`فایل نتایج بارگذاری شد (${AppState.resultsIndex.size} رکورد در ${Object.keys(AppState.resultsData).length} شیت)`, 'success');
+        checkDataReady();
+      }
+    });
+  });
+  document.getElementById('toggle-sidebar').onclick = () => {
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.toggle('mobile-open');
+      document.getElementById('sidebar-overlay').classList.toggle('active');
+    } else {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+      setTimeout(() => Object.values(AppState.charts).forEach(c => c?.resize?.()), 350);
+    }
+  };
+  document.getElementById('sidebar-overlay').onclick = () => {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('sidebar-overlay').classList.remove('active');
+  };
+  document.getElementById('toggle-dark').onclick = () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    Chart.defaults.color = document.body.classList.contains('dark') ? '#f1f5f9' : '#0f172a';
+    Object.values(AppState.charts).forEach(c => c?.update?.());
+  };
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark');
+    Chart.defaults.color = '#f1f5f9';
+  }
+  document.getElementById('export-excel').onclick = () => ExportManager.toExcel();
+  document.getElementById('export-pdf').onclick = () => ExportManager.toPDF();
+  document.getElementById('print-btn').onclick = () => ExportManager.print();
+  SearchEngine.init();
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => Object.values(AppState.charts).forEach(c => c?.resize?.()), 250);
+  });
+  Chart.defaults.font.family = "'Vazirmatn', Tahoma, sans-serif";
+  Chart.defaults.color = '#0f172a';
+});
+</script>
+</body>
+</html>
