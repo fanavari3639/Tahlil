@@ -32,234 +32,55 @@ body { font-family: 'Vazirmatn', Tahoma, sans-serif; background: var(--bg); colo
 
 .layout { display: flex; min-height: 100vh; position: relative; }
 
-/* ============================================
-   سایدبار با ساختار Flex برای اسکرول صحیح
-   ============================================ */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--sidebar-bg);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
+  display: flex; flex-direction: column; flex-shrink: 0;
   transition: transform 0.3s ease, width 0.3s ease;
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
+  position: fixed; top: 0; right: 0; bottom: 0;
   z-index: 1000;
   border-left: 1px solid rgba(255,255,255,0.05);
-  /* ارتفاع کامل صفحه */
   height: 100vh;
-  /* مخفی کردن سرریز افقی */
   overflow-x: hidden;
-  /* اسکرول عمودی */
   overflow-y: auto;
 }
 .sidebar.collapsed { width: 72px; }
-
-/* اسکرول‌بار سفارشی سایدبار */
-.sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-.sidebar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
-}
-
-.sidebar-header { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 20px; 
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
-}
-.logo-icon { 
-  width: 40px; height: 40px; 
-  background: linear-gradient(135deg, var(--accent), #818cf8); 
-  border-radius: 10px; 
-  display: flex; align-items: center; justify-content: center; 
-  color: #fff; font-size: 18px; flex-shrink: 0; 
-}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+.sidebar-header { display: flex; align-items: center; gap: 12px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+.logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent), #818cf8); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; flex-shrink: 0; }
 .logo-text { color: #fff; font-weight: 700; font-size: 13px; white-space: nowrap; line-height: 1.4; }
 .logo-text small { display: block; font-size: 10px; color: #94a3b8; font-weight: 400; }
 .sidebar.collapsed .logo-text { display: none; }
-
-/* ============================================
-   Nav با اسکرول مستقل
-   ============================================ */
-nav { 
-  padding: 16px 12px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 4px; 
-  /* اسکرول مستقل */
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* اسکرول‌بار nav */
-nav::-webkit-scrollbar {
-  width: 4px;
-}
-nav::-webkit-scrollbar-track {
-  background: transparent;
-}
-nav::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 2px;
-}
-
-.nav-btn { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  width: 100%; 
-  padding: 12px 14px; 
-  background: none; 
-  border: none; 
-  color: var(--sidebar-text); 
-  cursor: pointer; 
-  font-family: inherit; 
-  font-size: 13px; 
-  border-radius: 10px; 
-  transition: all 0.2s; 
-  white-space: nowrap; 
-  text-align: right;
-  flex-shrink: 0;
-}
+nav { padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overflow-x: hidden; flex: 1 1 auto; min-height: 0; }
+nav::-webkit-scrollbar { width: 4px; }
+nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 2px; }
+.nav-btn { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; background: none; border: none; color: var(--sidebar-text); cursor: pointer; font-family: inherit; font-size: 13px; border-radius: 10px; transition: all 0.2s; white-space: nowrap; text-align: right; flex-shrink: 0; }
 .nav-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
 .nav-btn.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); font-weight: 600; }
 .nav-btn .icon { width: 20px; text-align: center; flex-shrink: 0; }
-.sidebar.collapsed .nav-btn .label, 
-.sidebar.collapsed .submenu-arrow,
-.sidebar.collapsed .sub-btn .record-count { display: none; }
-
+.sidebar.collapsed .nav-btn .label, .sidebar.collapsed .submenu-arrow, .sidebar.collapsed .sub-btn .record-count { display: none; }
 .has-submenu { justify-content: space-between; }
 .submenu-arrow { transition: transform 0.3s; font-size: 12px; flex-shrink: 0; }
 .has-submenu.open .submenu-arrow { transform: rotate(180deg); }
-
-.submenu { 
-  max-height: 0; 
-  overflow: hidden; 
-  transition: max-height 0.4s ease; 
-  background: rgba(0,0,0,0.2); 
-  border-radius: 10px; 
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-.submenu.open { max-height: 5000px; }
-
-/* ============================================
-   اصلاح کلیدی: نمایش کامل نام شیت‌ها
-   ============================================ */
-.sub-btn { 
-  padding: 10px 46px 10px 12px !important;
-  font-size: 12px !important; 
-  color: #cbd5e1 !important;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-  white-space: normal !important;
-  text-align: right !important;
-  line-height: 1.6;
-  min-height: 40px;
-  border-radius: 8px;
-}
-
-.sub-btn > span:first-child {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-word;
-  white-space: normal;
-}
-
-.sub-btn .record-count {
-  font-size: 10px;
-  background: rgba(255,255,255,0.1);
-  padding: 3px 8px;
-  border-radius: 8px;
-  color: #cbd5e1;
-  flex-shrink: 0;
-  white-space: nowrap;
-  margin-top: 1px;
-}
-
-.sub-btn:hover {
-  background: rgba(255,255,255,0.05) !important;
-}
-
-.sub-btn.active { 
-  color: #fff !important; 
-  background: rgba(99,102,241,0.3) !important; 
-  border-right: 3px solid var(--accent); 
-}
-
-.sidebar.collapsed .sub-btn {
-  padding: 10px 14px !important;
-  justify-content: center;
-}
-.sidebar.collapsed .sub-btn > span:first-child {
-  display: none;
-}
-.sidebar.collapsed .submenu {
-  max-height: 0 !important;
-}
-
-.sidebar-footer { 
-  margin-top: auto; 
-  padding: 16px 20px; 
-  border-top: 1px solid rgba(255,255,255,0.05); 
-  text-align: center;
-  flex-shrink: 0;
-}
+.submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0,0,0,0.2); border-radius: 10px; margin-top: 4px; flex-shrink: 0; }
+.submenu.open { max-height: 8000px; }
+.sub-btn { padding: 10px 46px 10px 12px !important; font-size: 12px !important; color: #cbd5e1 !important; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; white-space: normal !important; text-align: right !important; line-height: 1.6; min-height: 40px; border-radius: 8px; }
+.sub-btn > span:first-child { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; white-space: normal; }
+.sub-btn .record-count { font-size: 10px; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 8px; color: #cbd5e1; flex-shrink: 0; white-space: nowrap; margin-top: 1px; }
+.sub-btn:hover { background: rgba(255,255,255,0.05) !important; }
+.sub-btn.active { color: #fff !important; background: rgba(99,102,241,0.3) !important; border-right: 3px solid var(--accent); }
+.sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; flex-shrink: 0; }
 .sidebar-footer span { font-size: 11px; color: var(--sidebar-text); white-space: nowrap; opacity: 0.8; display: block; }
 .sidebar-footer .designer-name { color: #ef4444 !important; font-weight: 800; }
 .sidebar-footer .site-link { font-size: 10px; color: var(--sidebar-text); text-decoration: none; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; }
-.sidebar.collapsed .sidebar-footer span, 
-.sidebar.collapsed .sidebar-footer .site-link { opacity: 0; pointer-events: none; }
+.sidebar.collapsed .sidebar-footer span, .sidebar.collapsed .sidebar-footer .site-link { opacity: 0; pointer-events: none; }
 
-/* ============================================
-   Main
-   ============================================ */
-.main { 
-  flex: 1; 
-  margin-right: var(--sidebar-w); 
-  display: flex; 
-  flex-direction: column; 
-  transition: margin-right 0.3s ease; 
-  width: 100%; 
-  overflow-x: hidden;
-  min-height: 100vh;
-}
+.main { flex: 1; margin-right: var(--sidebar-w); display: flex; flex-direction: column; transition: margin-right 0.3s ease; width: 100%; overflow-x: hidden; min-height: 100vh; }
 .sidebar.collapsed ~ .main { margin-right: 72px; }
 
-.topbar { 
-  background: var(--surface); 
-  height: 70px; 
-  padding: 0 24px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-  border-bottom: 1px solid var(--border); 
-  box-shadow: var(--shadow); 
-  position: sticky; 
-  top: 0; 
-  z-index: 50; 
-  gap: 12px; 
-}
+.topbar { background: var(--surface); height: 70px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 50; gap: 12px; }
 .topbar-right, .topbar-left { display: flex; align-items: center; gap: 12px; }
 .global-search { position: relative; flex: 1; max-width: 400px; min-width: 200px; }
 .global-search input { width: 100%; padding: 10px 40px 10px 16px; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 10px; font-family: inherit; font-size: 13px; outline: none; transition: 0.2s; }
@@ -267,11 +88,9 @@ nav::-webkit-scrollbar-thumb {
 .global-search i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 .global-search .clear-search { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: none; }
 .global-search .clear-search.show { display: block; }
-
 .icon-btn { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 16px; flex-shrink: 0; }
 .icon-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 .content-area { flex: 1; padding: 24px; overflow-y: auto; overflow-x: hidden; }
-
 .upload-area { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .upload-btn { color: #fff; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; text-decoration: none; white-space: nowrap; border: none; font-family: inherit; }
 .upload-btn.staff { background: linear-gradient(135deg, #10b981, #34d399); }
@@ -288,7 +107,7 @@ nav::-webkit-scrollbar-thumb {
 .data-table tr:hover { background: rgba(79,70,229,0.05); }
 
 .filter-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; background: var(--surface); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); align-items: center; }
-.filter-select, .date-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; min-width: 140px; }
+.filter-select, .date-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; min-width: 140px; max-width: 300px; }
 .filter-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; min-width: 200px; }
 
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
@@ -322,14 +141,11 @@ nav::-webkit-scrollbar-thumb {
 body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
 .spinner { width: 50px; height: 50px; border: 5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
 .empty-state { background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius); padding: 60px 20px; text-align: center; color: var(--text-muted); margin-top: 20px; }
-
 .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px; flex-wrap: wrap; }
 .page-btn { padding: 8px 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; }
 .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
 .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
 .badge-success { background: rgba(16,185,129,0.15); color: var(--success); }
 .badge-danger { background: rgba(239,68,68,0.15); color: var(--danger); }
@@ -339,7 +155,6 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
 
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
 .sidebar-overlay.active { display: block; }
-
 .search-results-panel { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; max-height: 70vh; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 2000; display: none; overflow: hidden; }
 .search-results-panel.show { display: block; }
 .search-results-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
@@ -361,247 +176,76 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
 .stats-table tr:hover { background: rgba(79,70,229,0.05); }
 .stats-table .total-row { background: var(--bg); font-weight: 800; }
 
-/* ============================================
-   راهنمای کاربر (Onboarding Guide)
-   ============================================ */
-.guide-overlay {
-  position: fixed; inset: 0;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(6px);
-  z-index: 12000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
-}
-.guide-overlay.show { display: flex; }
-.guide-modal {
-  background: var(--surface);
-  border-radius: 20px;
-  max-width: 820px;
-  width: 100%;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-  display: flex;
-  flex-direction: column;
-  animation: guideIn 0.4s ease;
-}
-@keyframes guideIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.guide-header {
-  padding: 24px 28px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.guide-header h2 {
-  font-size: 18px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.guide-header .close-btn {
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  cursor: pointer;
-  font-size: 15px;
-  transition: 0.2s;
-}
-.guide-header .close-btn:hover { background: rgba(255,255,255,0.3); }
+.sheet-modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 20px; }
+.sheet-modal-overlay.show { display: flex; }
+.sheet-modal { background: var(--surface); border-radius: 16px; max-width: 600px; width: 100%; max-height: 85vh; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); display: flex; flex-direction: column; animation: sheetIn 0.3s ease; }
+@keyframes sheetIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+.sheet-modal-header { padding: 20px 24px; background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sheet-modal-header h3 { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.sheet-modal-header .close-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.2); color: #fff; cursor: pointer; font-size: 14px; }
+.sheet-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+.sheet-modal-body p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.8; }
+.sheet-checkbox-list { display: flex; flex-direction: column; gap: 8px; }
+.sheet-checkbox-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: 0.2s; }
+.sheet-checkbox-item:hover { border-color: var(--accent); background: rgba(79,70,229,0.05); }
+.sheet-checkbox-item.selected { border-color: var(--accent); background: rgba(79,70,229,0.1); }
+.sheet-checkbox-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+.sheet-checkbox-item .sheet-info { flex: 1; min-width: 0; }
+.sheet-checkbox-item .sheet-name { font-size: 13px; font-weight: 600; color: var(--text); word-break: break-word; line-height: 1.5; }
+.sheet-checkbox-item .sheet-count { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.sheet-modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--surface); }
+.sheet-modal-footer .select-all-btn { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 12px; }
+.sheet-modal-footer .confirm-btn { background: var(--accent); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600; }
+.sheet-modal-footer .confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.guide-steps {
-  display: flex;
-  gap: 6px;
-  padding: 16px 28px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  flex-shrink: 0;
-}
-.guide-step-dot {
-  flex: 1;
-  min-width: 60px;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--border);
-  cursor: pointer;
-  transition: 0.3s;
-  position: relative;
-}
+.tabs-container { display: flex; gap: 4px; padding: 8px; background: var(--bg); border-radius: 10px; margin-bottom: 16px; overflow-x: auto; flex-wrap: nowrap; }
+.tabs-container::-webkit-scrollbar { height: 6px; }
+.tabs-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.tab-btn { padding: 10px 16px; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-muted); white-space: nowrap; transition: 0.2s; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.tab-btn:hover { background: var(--surface); color: var(--text); }
+.tab-btn.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
+.tab-btn .tab-count { font-size: 10px; background: rgba(79,70,229,0.15); color: var(--accent); padding: 2px 8px; border-radius: 10px; }
+.tab-btn.active .tab-count { background: var(--accent); color: #fff; }
+
+.sheets-badges { display: flex; flex-wrap: wrap; gap: 4px; max-width: 500px; }
+.sheet-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.sheet-badge.accepted { background: rgba(16,185,129,0.15); color: var(--success); }
+.sheet-badge.rejected { background: rgba(239,68,68,0.15); color: var(--danger); }
+
+.guide-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px); z-index: 12000; display: none; align-items: center; justify-content: center; padding: 20px; }
+.guide-overlay.show { display: flex; }
+.guide-modal { background: var(--surface); border-radius: 20px; max-width: 820px; width: 100%; max-height: 90vh; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); display: flex; flex-direction: column; animation: guideIn 0.4s ease; }
+@keyframes guideIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.guide-header { padding: 24px 28px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.guide-header h2 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.guide-header .close-btn { width: 36px; height: 36px; border-radius: 10px; border: none; background: rgba(255,255,255,0.15); color: #fff; cursor: pointer; font-size: 15px; }
+.guide-steps { display: flex; gap: 6px; padding: 16px 28px; background: var(--bg); border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0; }
+.guide-step-dot { flex: 1; min-width: 60px; height: 6px; border-radius: 3px; background: var(--border); cursor: pointer; transition: 0.3s; }
 .guide-step-dot.active { background: var(--accent); }
 .guide-step-dot.done { background: var(--success); }
-
-.guide-body {
-  padding: 28px;
-  overflow-y: auto;
-  flex: 1;
-  line-height: 1.9;
-}
-.guide-body h3 {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.guide-body h3 .step-num {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-.guide-body p {
-  font-size: 13.5px;
-  color: var(--text);
-  margin-bottom: 12px;
-}
-.guide-body ul {
-  list-style: none;
-  margin: 12px 0 16px;
-}
-.guide-body ul li {
-  padding: 8px 0;
-  font-size: 13px;
-  color: var(--text);
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  line-height: 1.8;
-}
-.guide-body ul li::before {
-  content: '✓';
-  color: var(--success);
-  font-weight: 800;
-  font-size: 14px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.guide-body .info-box {
-  background: rgba(6,182,212,0.08);
-  border-right: 4px solid var(--info);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin: 16px 0;
-  font-size: 12.5px;
-  color: var(--text);
-  line-height: 1.9;
-}
-.guide-body .warn-box {
-  background: rgba(245,158,11,0.08);
-  border-right: 4px solid var(--warning);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin: 16px 0;
-  font-size: 12.5px;
-  color: var(--text);
-  line-height: 1.9;
-}
-.guide-body .success-box {
-  background: rgba(16,185,129,0.08);
-  border-right: 4px solid var(--success);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin: 16px 0;
-  font-size: 12.5px;
-  color: var(--text);
-  line-height: 1.9;
-}
-.guide-body .kbd {
-  display: inline-block;
-  padding: 2px 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-bottom-width: 2px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-family: inherit;
-  color: var(--text);
-}
-.guide-body table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 12px 0;
-  font-size: 12.5px;
-}
-.guide-body table th, .guide-body table td {
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  text-align: right;
-}
-.guide-body table th {
-  background: var(--bg);
-  font-weight: 700;
-}
-
-.guide-footer {
-  padding: 16px 28px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: var(--surface);
-  flex-shrink: 0;
-}
+.guide-body { padding: 28px; overflow-y: auto; flex: 1; line-height: 1.9; }
+.guide-body h3 { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.guide-body h3 .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+.guide-body p { font-size: 13.5px; color: var(--text); margin-bottom: 12px; }
+.guide-body ul { list-style: none; margin: 12px 0 16px; }
+.guide-body ul li { padding: 8px 0; font-size: 13px; color: var(--text); display: flex; align-items: flex-start; gap: 10px; line-height: 1.8; }
+.guide-body ul li::before { content: '✓'; color: var(--success); font-weight: 800; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.guide-body .info-box { background: rgba(6,182,212,0.08); border-right: 4px solid var(--info); border-radius: 8px; padding: 14px 16px; margin: 16px 0; font-size: 12.5px; line-height: 1.9; }
+.guide-body .warn-box { background: rgba(245,158,11,0.08); border-right: 4px solid var(--warning); border-radius: 8px; padding: 14px 16px; margin: 16px 0; font-size: 12.5px; line-height: 1.9; }
+.guide-body .success-box { background: rgba(16,185,129,0.08); border-right: 4px solid var(--success); border-radius: 8px; padding: 14px 16px; margin: 16px 0; font-size: 12.5px; line-height: 1.9; }
+.guide-body .danger-box { background: rgba(239,68,68,0.08); border-right: 4px solid var(--danger); border-radius: 8px; padding: 14px 16px; margin: 16px 0; font-size: 12.5px; line-height: 1.9; }
+.guide-body .kbd { display: inline-block; padding: 2px 8px; background: var(--bg); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 6px; font-size: 12px; font-family: inherit; color: var(--text); }
+.guide-body table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12.5px; }
+.guide-body table th, .guide-body table td { padding: 8px 12px; border: 1px solid var(--border); text-align: right; }
+.guide-body table th { background: var(--bg); font-weight: 700; }
+.guide-footer { padding: 16px 28px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); flex-shrink: 0; }
 .guide-footer .nav-btns { display: flex; gap: 8px; }
-.guide-footer button {
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-  border: 1px solid var(--border);
-}
-.guide-footer .btn-prev {
-  background: var(--surface);
-  color: var(--text);
-}
-.guide-footer .btn-prev:hover:not(:disabled) { background: var(--bg); }
+.guide-footer button { padding: 10px 20px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; border: 1px solid var(--border); }
+.guide-footer .btn-prev { background: var(--surface); color: var(--text); }
 .guide-footer .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
-.guide-footer .btn-next {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-.guide-footer .btn-next:hover { background: var(--accent-hover); }
-.guide-footer .btn-skip {
-  background: transparent;
-  color: var(--text-muted);
-  border: none;
-  font-size: 12px;
-}
-.guide-footer .btn-skip:hover { color: var(--text); }
-
-.guide-footer .dont-show {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-.guide-footer .dont-show input { cursor: pointer; }
+.guide-footer .btn-next { background: var(--accent); color: #fff; border-color: var(--accent); }
+.guide-footer .btn-skip { background: transparent; color: var(--text-muted); border: none; font-size: 12px; }
+.guide-footer .dont-show { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); cursor: pointer; }
 
 @media (max-width: 768px) {
   .sidebar { transform: translateX(100%); width: 280px; }
@@ -616,7 +260,6 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
   .kpi-grid { grid-template-columns: 1fr 1fr; }
   .charts-grid { grid-template-columns: 1fr; }
   .guide-body { padding: 20px; }
-  .guide-header { padding: 18px 20px; }
   .guide-footer { padding: 12px 20px; flex-wrap: wrap; }
   .guide-footer .dont-show { order: 3; width: 100%; margin-top: 8px; }
 }
@@ -637,7 +280,23 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
 
 <div class="toast" id="toast"></div>
 
-<!-- پنل جستجوی سراسری -->
+<div class="sheet-modal-overlay" id="sheet-modal-overlay">
+  <div class="sheet-modal">
+    <div class="sheet-modal-header">
+      <h3><i class="fas fa-clipboard-check"></i> انتخاب شیت‌های آزمون</h3>
+      <button class="close-btn" onclick="SheetSelector.cancel()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="sheet-modal-body">
+      <p>شیت‌هایی که می‌خواهید در تحلیل لحاظ شوند را انتخاب کنید. فقط داده‌های شیت‌های انتخاب‌شده پردازش می‌شوند و در منو نمایش داده می‌شوند.</p>
+      <div class="sheet-checkbox-list" id="sheet-checkbox-list"></div>
+    </div>
+    <div class="sheet-modal-footer">
+      <button class="select-all-btn" id="select-all-btn" onclick="SheetSelector.toggleAll()"><i class="fas fa-check-double"></i> انتخاب همه</button>
+      <button class="confirm-btn" id="confirm-sheets-btn" onclick="SheetSelector.confirm()" disabled><i class="fas fa-check"></i> تأیید و پردازش</button>
+    </div>
+  </div>
+</div>
+
 <div class="search-results-panel" id="search-results-panel">
   <div class="search-results-header">
     <strong id="search-results-count">نتایج جستجو</strong>
@@ -646,7 +305,6 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
   <div class="search-results-body" id="search-results-body"></div>
 </div>
 
-<!-- راهنمای کاربر (Onboarding Guide) -->
 <div class="guide-overlay" id="guide-overlay">
   <div class="guide-modal">
     <div class="guide-header">
@@ -657,17 +315,10 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
     <div class="guide-body" id="guide-body"></div>
     <div class="guide-footer">
       <div class="nav-btns">
-        <button class="btn-prev" id="guide-prev" onclick="Guide.prev()">
-          <i class="fas fa-chevron-right"></i> قبلی
-        </button>
-        <button class="btn-next" id="guide-next" onclick="Guide.next()">
-          بعدی <i class="fas fa-chevron-left"></i>
-        </button>
+        <button class="btn-prev" id="guide-prev" onclick="Guide.prev()"><i class="fas fa-chevron-right"></i> قبلی</button>
+        <button class="btn-next" id="guide-next" onclick="Guide.next()">بعدی <i class="fas fa-chevron-left"></i></button>
       </div>
-      <label class="dont-show">
-        <input type="checkbox" id="guide-dont-show">
-        <span>دیگر نشان نده</span>
-      </label>
+      <label class="dont-show"><input type="checkbox" id="guide-dont-show"><span>دیگر نشان نده</span></label>
       <button class="btn-skip" onclick="Guide.close()">رد کردن راهنما</button>
     </div>
   </div>
@@ -679,18 +330,13 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
-      <div class="logo-text">
-        آموزش و پرورش خوزستان
-        <small>تحلیل امور استخدامی</small>
-      </div>
+      <div class="logo-text">آموزش و پرورش خوزستان<small>تحلیل امور استخدامی</small></div>
     </div>
     <nav id="main-nav"></nav>
     <div class="sidebar-footer">
       <span>برنامه‌نویس: شرکت سانا ایده الکترونیک کرخه</span>
       <span class="designer-name">مهندس سیدمحمدمهدی موسوی</span>
-      <a href="https://www.sanaide.ir" target="_blank" class="site-link">
-        <i class="fas fa-globe"></i> www.sanaide.ir
-      </a>
+      <a href="https://www.sanaide.ir" target="_blank" class="site-link"><i class="fas fa-globe"></i> www.sanaide.ir</a>
     </div>
   </aside>
 
@@ -700,38 +346,22 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
         <button id="toggle-sidebar" class="icon-btn"><i class="fas fa-bars"></i></button>
         <h1 id="page-title" style="font-size: 16px; font-weight: 700;">داشبورد تحلیلی</h1>
       </div>
-      
       <div class="global-search">
         <input type="text" id="global-search-input" placeholder="جستجوی پرسنل (نام، کدملی، شهرستان...)">
         <i class="fas fa-search"></i>
         <button class="clear-search" id="clear-search" onclick="SearchEngine.clearSearch()"><i class="fas fa-times"></i></button>
       </div>
-      
       <div class="topbar-left">
-        <button id="guide-btn" class="icon-btn" title="راهنمای استفاده" style="color: #4f46e5; border-color: #4f46e5;">
-          <i class="fas fa-circle-question"></i>
-        </button>
-        <button id="export-excel" class="icon-btn" title="خروجی Excel" style="color: #059669; border-color: #059669;">
-          <i class="fas fa-file-excel"></i>
-        </button>
-        <button id="export-pdf" class="icon-btn" title="خروجی PDF" style="color: #ef4444; border-color: #ef4444;">
-          <i class="fas fa-file-pdf"></i>
-        </button>
-        <button id="print-btn" class="icon-btn" title="چاپ" style="color: #64748b; border-color: #64748b;">
-          <i class="fas fa-print"></i>
-        </button>
+        <button id="guide-btn" class="icon-btn" title="راهنمای استفاده" style="color: #4f46e5; border-color: #4f46e5;"><i class="fas fa-circle-question"></i></button>
+        <button id="export-html" class="icon-btn" title="خروجی HTML" style="color: #0891b2; border-color: #0891b2;"><i class="fas fa-code"></i></button>
+        <button id="export-excel" class="icon-btn" title="خروجی Excel" style="color: #059669; border-color: #059669;"><i class="fas fa-file-excel"></i></button>
+        <button id="export-pdf" class="icon-btn" title="خروجی PDF" style="color: #ef4444; border-color: #ef4444;"><i class="fas fa-file-pdf"></i></button>
+        <button id="print-btn" class="icon-btn" title="چاپ" style="color: #64748b; border-color: #64748b;"><i class="fas fa-print"></i></button>
         <button id="toggle-dark" class="icon-btn"><i class="fas fa-moon"></i></button>
         <div class="upload-area">
-          <label for="staff-file" class="upload-btn staff" title="پرسنل موجود">
-            <i class="fas fa-users"></i>
-            <span>پرسنل موجود</span>
-          </label>
+          <label for="staff-file" class="upload-btn staff" title="پرسنل موجود"><i class="fas fa-users"></i><span>پرسنل موجود</span></label>
           <input type="file" id="staff-file" accept=".xlsx,.xls" hidden>
-
-          <label for="results-file" class="upload-btn results" title="نتایج آزمون">
-            <i class="fas fa-clipboard-check"></i>
-            <span>نتایج آزمون</span>
-          </label>
+          <label for="results-file" class="upload-btn results" title="نتایج آزمون"><i class="fas fa-clipboard-check"></i><span>نتایج آزمون</span></label>
           <input type="file" id="results-file" accept=".xlsx,.xls" hidden>
         </div>
       </div>
@@ -742,14 +372,9 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
         <i class="fas fa-cloud-upload-alt" style="font-size: 64px; margin-bottom: 16px; color: var(--accent); opacity: 0.4;"></i>
         <p style="font-size: 16px; margin-bottom: 8px;">برای شروع، فایل‌های اکسل را بارگذاری کنید</p>
         <p style="font-size: 13px;">ابتدا فایل «پرسنل موجود» و سپس فایل «نتایج آزمون» را آپلود نمایید</p>
-        <button onclick="Guide.open()" class="upload-btn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); margin-top: 20px;">
-          <i class="fas fa-circle-question"></i>
-          <span>مشاهده راهنمای گام‌به‌گام</span>
-        </button>
+        <button onclick="Guide.open()" class="upload-btn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); margin-top: 20px;"><i class="fas fa-circle-question"></i><span>مشاهده راهنمای گام‌به‌گام</span></button>
       </div>
-      <div id="dashboard-content" style="display: none;">
-        <div id="dynamic-view"></div>
-      </div>
+      <div id="dashboard-content" style="display: none;"><div id="dynamic-view"></div></div>
     </div>
   </main>
 </div>
@@ -761,8 +386,11 @@ body.dark .loading-overlay { background: rgba(11,17,32,0.95); }
 const AppState = {
   staffData: {},
   resultsData: {},
+  allSheetsRaw: {},
+  selectedSheets: [],
   staffIndex: new Map(),
   resultsIndex: new Map(),
+  resultsByPerson: new Map(),
   crossRefCache: null,
   currentView: { type: 'dashboard', source: null, filters: {} },
   charts: {},
@@ -770,7 +398,10 @@ const AppState = {
   searchIndex: [],
   globalSearchTerm: '',
   currentTableData: [],
-  currentTableHeaders: []
+  currentTableHeaders: [],
+  currentSheetTab: 'all',
+  currentSheetTabs: [],
+  currentStatusColumns: [] // ✅ ستون‌های وضعیت فعال در نمای فعلی
 };
 
 // =============================================
@@ -782,40 +413,25 @@ const Utils = {
     document.getElementById('loading-progress').textContent = progress;
     document.getElementById('loading').style.display = show ? 'flex' : 'none';
   },
-  
   showToast(msg, type = 'info') {
     const toast = document.getElementById('toast');
     toast.className = `toast show ${type}`;
     toast.textContent = msg;
     setTimeout(() => toast.classList.remove('show'), 3000);
   },
-  
   toPersianNum(num) {
     if (num === undefined || num === null || num === '') return '—';
     return String(num).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
   },
-  
   normalizeForSearch(str) {
-    return String(str)
-      .toLowerCase()
-      .replace(/ي/g, 'ی')
-      .replace(/ك/g, 'ک')
-      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
-      .replace(/\s+/g, ' ')
-      .trim();
+    return String(str).toLowerCase().replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/\s+/g, ' ').trim();
   },
-  
   normalizeNationalId(id) {
     if (id === undefined || id === null || id === '') return '';
-    let str = String(id).trim()
-      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
-      .replace(/[^0-9]/g, '');
-    if (str.length > 0 && str.length < 10) {
-      str = str.padStart(10, '0');
-    }
+    let str = String(id).trim().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '');
+    if (str.length > 0 && str.length < 10) str = str.padStart(10, '0');
     return str;
   },
-  
   findColumn(headers, patterns) {
     for (const pattern of patterns) {
       const col = headers.find(h => new RegExp(pattern, 'i').test(h));
@@ -824,63 +440,177 @@ const Utils = {
     return null;
   },
   
+  // ✅ پیدا کردن همه ستون‌های وضعیت کلیدی
+  findStatusColumns(headers) {
+    const statusPatterns = [
+      'وضعیت نهایی نتیجه داوطلب',
+      'پیام عمومی نتیجه پایانی',
+      'وضعیت نهایی',
+      'وضعیت نهایی داوطلب',
+      'پیام عمومی'
+    ];
+    const found = [];
+    statusPatterns.forEach(pattern => {
+      headers.forEach(h => {
+        if (h.includes(pattern) && !found.includes(h)) {
+          found.push(h);
+        }
+      });
+    });
+    return found;
+  },
+  
   formatNumber(num) {
     if (isNaN(num) || num === null || num === undefined) return '—';
     return Number(num).toLocaleString('fa-IR');
   },
-  
   isIdColumn(colName) {
-    const idPatterns = [
-      'کدملی', 'کد ملی', 'کد ملي', 'nationalid', 'national_id',
-      'کد پرسنلی', 'کد پرسنلي', 'شماره پرسنلی', 'شماره پرسنلي',
-      'شماره شناسنامه', 'کد منطقه', 'تلفن', 'موبایل', 'کد پستی'
-    ];
+    const idPatterns = ['کدملی', 'کد ملی', 'کد ملي', 'nationalid', 'national_id', 'کد پرسنلی', 'کد پرسنلي', 'شماره پرسنلی', 'شماره پرسنلي', 'شماره شناسنامه', 'کد منطقه', 'تلفن', 'موبایل', 'کد پستی'];
     return idPatterns.some(p => new RegExp(p, 'i').test(String(colName)));
   },
-  
   formatCellValue(value, colName) {
     if (value === undefined || value === null || value === '') return '—';
     const colStr = String(colName);
-    if (this.isIdColumn(colStr)) {
-      return String(value).trim().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-    }
-    if (/تاریخ|تاريخ|date|تولد/i.test(colStr)) {
-      return String(value).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-    }
-    if (typeof value === 'number' && !isNaN(value) && Number.isFinite(value)) {
-      return Number(value).toLocaleString('fa-IR');
-    }
+    if (this.isIdColumn(colStr)) return String(value).trim().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    if (/تاریخ|تاريخ|date|تولد/i.test(colStr)) return String(value).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    if (typeof value === 'number' && !isNaN(value) && Number.isFinite(value)) return Number(value).toLocaleString('fa-IR');
     return String(value);
   },
   
   analyzeResultStatus(row) {
-    if (!row) return { isAccepted: false, isRejected: false, isOther: false, statusText: '', category: 'unknown' };
-    const statusColumns = [
-      'وضعیت نهایی نتیجه داوطلب', 'پیام عمومی نتیجه پایانی', 'وضعیت نهایی',
-      'وضعیت', 'پیام کارنامه', 'وضعیت نتیجه آزمون کتبی',
-      'وضعیت بررسی مدارک', 'وضعیت اعتراضات', 'وضعیت نهایی اعتراضات'
-    ];
-    const statusValues = [];
-    for (const col of statusColumns) {
-      for (const key of Object.keys(row)) {
-        if (key === col || key.includes(col) || col.includes(key)) {
-          const val = row[key];
-          if (val !== undefined && val !== null && String(val).trim() !== '') {
-            statusValues.push(String(val).trim());
+    if (!row) return { isAccepted: false, isRejected: true, statusText: '', category: 'rejected' };
+    const getVal = (patterns) => {
+      for (const pattern of patterns) {
+        for (const key of Object.keys(row)) {
+          if (key === pattern || key.includes(pattern) || pattern.includes(key)) {
+            const val = row[key];
+            if (val !== undefined && val !== null && String(val).trim() !== '') return String(val).trim();
           }
         }
       }
-    }
-    const combinedStatus = statusValues.join(' | ');
-    const normalized = combinedStatus.replace(/\s+/g, ' ').replace(/ي/g, 'ی').replace(/ك/g, 'ک').trim();
-    const isAccepted = /پذیرفته\s*شده\s*نهایی/.test(normalized);
-    const isRejected = !isAccepted && /مردود|عدم\s*احراز|حذف\s*از\s*پردازش|عدم\s*واجد|فاقد\s*شرایط|رد\s*شده/.test(normalized);
-    const isOther = !isAccepted && !isRejected && /انصراف|غایب|عدم\s*حضور|در\s*حال\s*بررسی|شرکت\s*نکرده/.test(normalized);
-    return {
-      isAccepted, isRejected, isOther,
-      statusText: combinedStatus || 'نامشخص',
-      category: isAccepted ? 'accepted' : isRejected ? 'rejected' : isOther ? 'other' : 'unknown'
+      return '';
     };
+    const finalMsg = getVal(['پیام عمومی نتیجه پایانی', 'پیام عمومی', 'پیام کارنامه']);
+    const finalStatus = getVal(['وضعیت نهایی نتیجه داوطلب', 'وضعیت نهایی داوطلب']);
+    const finalStatusShort = getVal(['وضعیت نهایی', 'نتیجه نهایی']);
+    const norm = (s) => String(s).replace(/\s+/g, ' ').replace(/ي/g, 'ی').replace(/ك/g, 'ک').trim();
+    const nFinalMsg = norm(finalMsg);
+    const nFinalStatus = norm(finalStatus);
+    const nFinalStatusShort = norm(finalStatusShort);
+    const cond1 = /پذیرفته\s*شده\s*نهایی/.test(nFinalMsg);
+    const cond2 = nFinalMsg === 'پذیرفته شده نهایی';
+    const cond3 = /قبول\s*نهایی/.test(nFinalStatus);
+    const cond4 = /^قبول$/.test(nFinalStatusShort) || nFinalStatusShort === 'قبول';
+    const cond5 = /در\s*حال\s*بررسی\s*گزینش/.test(nFinalStatus);
+    const isAccepted = cond1 || cond2 || cond3 || cond4 || cond5;
+    const isRejected = !isAccepted;
+    const parts = [];
+    if (finalMsg) parts.push(`پیام: ${finalMsg}`);
+    if (finalStatus) parts.push(`وضعیت داوطلب: ${finalStatus}`);
+    if (finalStatusShort && finalStatusShort !== finalStatus) parts.push(`وضعیت نهایی: ${finalStatusShort}`);
+    return { isAccepted, isRejected, statusText: parts.join(' | ') || 'نامشخص', category: isAccepted ? 'accepted' : 'rejected' };
+  }
+};
+
+// =============================================
+// SHEET SELECTOR
+// =============================================
+const SheetSelector = {
+  pendingFile: null,
+  pendingSheetNames: [],
+  selectedSheets: new Set(),
+  open(file, sheetNames) {
+    this.pendingFile = file;
+    this.pendingSheetNames = sheetNames;
+    this.selectedSheets = new Set(sheetNames);
+    const list = document.getElementById('sheet-checkbox-list');
+    list.innerHTML = sheetNames.map((name, idx) => `
+      <label class="sheet-checkbox-item selected" data-sheet-name="${name}">
+        <input type="checkbox" checked onchange="SheetSelector.toggleItem(this)">
+        <div class="sheet-info">
+          <div class="sheet-name">${name}</div>
+          <div class="sheet-count" id="sheet-count-${idx}">در حال شمارش...</div>
+        </div>
+      </label>
+    `).join('');
+    document.getElementById('sheet-modal-overlay').classList.add('show');
+    document.getElementById('confirm-sheets-btn').disabled = false;
+    this.updateSelectAllBtn();
+    setTimeout(() => {
+      try {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const wb = XLSX.read(e.target.result, { type: 'binary' });
+          sheetNames.forEach((name, idx) => {
+            try {
+              const sheet = wb.Sheets[name];
+              const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+              const countEl = document.getElementById(`sheet-count-${idx}`);
+              if (countEl) countEl.textContent = `${Utils.toPersianNum(rows.length)} رکورد`;
+            } catch (err) {
+              const countEl = document.getElementById(`sheet-count-${idx}`);
+              if (countEl) countEl.textContent = 'خطا در شمارش';
+            }
+          });
+        };
+        reader.readAsBinaryString(file);
+      } catch (err) { console.error('Sheet count error:', err); }
+    }, 100);
+  },
+  toggleItem(checkbox) {
+    const item = checkbox.closest('.sheet-checkbox-item');
+    const sheetName = item.dataset.sheetName;
+    if (checkbox.checked) { this.selectedSheets.add(sheetName); item.classList.add('selected'); }
+    else { this.selectedSheets.delete(sheetName); item.classList.remove('selected'); }
+    this.updateConfirmBtn();
+    this.updateSelectAllBtn();
+  },
+  toggleAll() {
+    const allSelected = this.selectedSheets.size === this.pendingSheetNames.length;
+    const list = document.getElementById('sheet-checkbox-list');
+    const checkboxes = list.querySelectorAll('input[type="checkbox"]');
+    const items = list.querySelectorAll('.sheet-checkbox-item');
+    if (allSelected) {
+      this.selectedSheets.clear();
+      checkboxes.forEach(cb => cb.checked = false);
+      items.forEach(it => it.classList.remove('selected'));
+    } else {
+      this.pendingSheetNames.forEach(n => this.selectedSheets.add(n));
+      checkboxes.forEach(cb => cb.checked = true);
+      items.forEach(it => it.classList.add('selected'));
+    }
+    this.updateConfirmBtn();
+    this.updateSelectAllBtn();
+  },
+  updateConfirmBtn() { document.getElementById('confirm-sheets-btn').disabled = this.selectedSheets.size === 0; },
+  updateSelectAllBtn() {
+    const btn = document.getElementById('select-all-btn');
+    const allSelected = this.selectedSheets.size === this.pendingSheetNames.length;
+    btn.innerHTML = allSelected ? '<i class="fas fa-times"></i> لغو انتخاب همه' : '<i class="fas fa-check-double"></i> انتخاب همه';
+  },
+  confirm() {
+    if (this.selectedSheets.size === 0) return;
+    const selected = Array.from(this.selectedSheets);
+    document.getElementById('sheet-modal-overlay').classList.remove('show');
+    Utils.showLoading(true, 'در حال پردازش شیت‌های انتخاب‌شده...');
+    setTimeout(() => {
+      const filteredData = {};
+      selected.forEach(sheet => { if (AppState.allSheetsRaw[sheet]) filteredData[sheet] = AppState.allSheetsRaw[sheet]; });
+      AppState.resultsData = filteredData;
+      AppState.selectedSheets = selected;
+      DataProcessor.buildResultsIndex();
+      DataProcessor.buildSearchIndex();
+      AppState.crossRefCache = null;
+      Utils.showLoading(false);
+      Utils.showToast(`فایل نتایج با ${Utils.toPersianNum(selected.length)} شیت بارگذاری شد`, 'success');
+      checkDataReady();
+    }, 50);
+  },
+  cancel() {
+    document.getElementById('sheet-modal-overlay').classList.remove('show');
+    this.pendingFile = null;
+    this.pendingSheetNames = [];
+    this.selectedSheets.clear();
   }
 };
 
@@ -888,44 +618,55 @@ const Utils = {
 // DATA PROCESSING
 // =============================================
 const DataProcessor = {
-  processFile(file, type, callback) {
+  processStaffFile(file, callback) {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        Utils.showLoading(true, `در حال خواندن فایل ${type}...`);
+        Utils.showLoading(true, 'در حال خواندن فایل پرسنل...');
         const wb = XLSX.read(e.target.result, { type: 'binary' });
         const data = {};
         wb.SheetNames.forEach((rawSheetName) => {
           const sheetName = String(rawSheetName).trim();
           try {
-            const sheet = wb.Sheets[rawSheetName];
-            const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-            data[sheetName] = rows;
-          } catch (err) {
-            console.error('Sheet error:', rawSheetName, err);
-            data[sheetName] = [];
-          }
+            data[sheetName] = XLSX.utils.sheet_to_json(wb.Sheets[rawSheetName], { defval: '' });
+          } catch (err) { data[sheetName] = []; }
         });
-        if (type === 'staff') {
-          AppState.staffData = data;
-          this.buildStaffIndex();
-        } else {
-          AppState.resultsData = data;
-          this.buildResultsIndex();
-        }
+        AppState.staffData = data;
+        this.buildStaffIndex();
         this.buildSearchIndex();
         AppState.crossRefCache = null;
         Utils.showLoading(false);
         callback(true);
       } catch (err) {
         Utils.showLoading(false);
-        Utils.showToast('خطا در خواندن فایل', 'error');
+        Utils.showToast('خطا در خواندن فایل پرسنل', 'error');
         callback(false);
       }
     };
     reader.readAsBinaryString(file);
   },
-  
+  readResultsFileMetadata(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const wb = XLSX.read(e.target.result, { type: 'binary' });
+        const sheetNames = wb.SheetNames.map(n => String(n).trim());
+        const rawData = {};
+        wb.SheetNames.forEach((rawName) => {
+          const sheetName = String(rawName).trim();
+          try {
+            rawData[sheetName] = XLSX.utils.sheet_to_json(wb.Sheets[rawName], { defval: '' });
+          } catch (err) { rawData[sheetName] = []; }
+        });
+        AppState.allSheetsRaw = rawData;
+        callback(sheetNames);
+      } catch (err) {
+        Utils.showToast('خطا در خواندن فایل نتایج', 'error');
+        callback(null);
+      }
+    };
+    reader.readAsBinaryString(file);
+  },
   buildStaffIndex() {
     AppState.staffIndex.clear();
     Object.entries(AppState.staffData).forEach(([sheet, rows]) => {
@@ -950,6 +691,7 @@ const DataProcessor = {
   
   buildResultsIndex() {
     AppState.resultsIndex.clear();
+    AppState.resultsByPerson = new Map();
     Object.entries(AppState.resultsData).forEach(([sheet, rows]) => {
       if (!rows.length) return;
       const headers = Object.keys(rows[0]);
@@ -958,16 +700,42 @@ const DataProcessor = {
       rows.forEach(row => {
         const id = Utils.normalizeNationalId(row[idCol]);
         if (id && id.length >= 8) {
-          const existing = AppState.resultsIndex.get(id);
-          if (existing) {
-            existing._sheets = existing._sheets || [existing._sheet];
-            if (!existing._sheets.includes(sheet)) existing._sheets.push(sheet);
-          } else {
-            AppState.resultsIndex.set(id, { ...row, _sheet: sheet, _type: 'results', _sheets: [sheet] });
-          }
+          const status = Utils.analyzeResultStatus(row);
+          if (!AppState.resultsByPerson.has(id)) AppState.resultsByPerson.set(id, []);
+          AppState.resultsByPerson.get(id).push({ row, sheet, status, _nationalId: id });
+          AppState.resultsIndex.set(id, { ...row, _sheet: sheet, _type: 'results', _sheets: [sheet] });
         }
       });
     });
+  },
+  
+  getPersonFinalStatus(nationalId) {
+    const records = AppState.resultsByPerson ? AppState.resultsByPerson.get(nationalId) : null;
+    if (!records || records.length === 0) return null;
+    
+    const sheets = [...new Set(records.map(r => r.sheet))];
+    const acceptedRecords = records.filter(r => r.status.isAccepted);
+    const rejectedRecords = records.filter(r => !r.status.isAccepted);
+    
+    const isAcceptedAnywhere = acceptedRecords.length > 0;
+    const isDuplicate = sheets.length > 1;
+    
+    const representative = isAcceptedAnywhere ? acceptedRecords[0] : rejectedRecords[0];
+    
+    return {
+      isAccepted: isAcceptedAnywhere,
+      isRejected: !isAcceptedAnywhere,
+      isDuplicate,
+      sheets,
+      acceptedSheets: acceptedRecords.map(r => r.sheet),
+      rejectedSheets: rejectedRecords.map(r => r.sheet),
+      records,
+      representative: representative.row,
+      representativeSheet: representative.sheet,
+      acceptedCount: acceptedRecords.length,
+      rejectedCount: rejectedRecords.length,
+      totalRecords: records.length
+    };
   },
   
   buildSearchIndex() {
@@ -979,11 +747,10 @@ const DataProcessor = {
       const job = row['شغل'] || '';
       const fatherName = row['نام پدر'] || '';
       AppState.searchIndex.push({
-        type: 'staff', id: id,
-        name: `${name} ${family}`.trim(),
-        nationalId: id, county: county, job: job,
+        type: 'staff', id, name: `${name} ${family}`.trim(),
+        nationalId: id, county, job,
         searchable: Utils.normalizeForSearch(`${name} ${family} ${id} ${county} ${job} ${fatherName}`),
-        row: row
+        row
       });
     });
     AppState.resultsIndex.forEach((row, id) => {
@@ -993,11 +760,10 @@ const DataProcessor = {
         const county = row['شهرستان شغل'] || row['منطقه'] || row['شهرستان'] || '';
         const job = row['شغل'] || '';
         AppState.searchIndex.push({
-          type: 'results', id: id,
-          name: `${name} ${family}`.trim(),
-          nationalId: id, county: county, job: job,
+          type: 'results', id, name: `${name} ${family}`.trim(),
+          nationalId: id, county, job,
           searchable: Utils.normalizeForSearch(`${name} ${family} ${id} ${county} ${job}`),
-          row: row
+          row
         });
       }
     });
@@ -1005,34 +771,118 @@ const DataProcessor = {
   
   analyzeCrossReference() {
     if (AppState.crossRefCache) return AppState.crossRefCache;
+    
     const result = {
-      accepted: [], rejected: [], other: [], ghost: [], withoutExam: [],
+      acceptedInStaff: [],
+      absentStaff: [],
+      rejectedInStaff: [],
+      rejectedOnly: [],
+      duplicates: [],
+      allAccepted: [],
+      allRejected: [],
+      acceptedInStaffBySheet: {},
+      absentStaffBySheet: {},
+      rejectedInStaffBySheet: {},
+      rejectedOnlyBySheet: {},
       totalStaff: AppState.staffIndex.size,
-      totalResults: AppState.resultsIndex.size,
+      totalResults: AppState.resultsByPerson ? AppState.resultsByPerson.size : 0,
+      staffInExam: 0,
+      uniqueAccepted: 0,
+      uniqueRejected: 0,
       byRegion: {}
     };
-    AppState.resultsIndex.forEach((resultRow, id) => {
-      const status = Utils.analyzeResultStatus(resultRow);
-      const inStaff = AppState.staffIndex.has(id);
-      const staffRow = AppState.staffIndex.get(id) || {};
-      if (status.isAccepted) {
-        if (inStaff) {
-          result.accepted.push({ ...staffRow, ...resultRow, _nationalId: id, _category: 'accepted', _statusText: status.statusText });
+    
+    if (AppState.resultsByPerson) {
+      AppState.resultsByPerson.forEach((records, id) => {
+        const finalStatus = this.getPersonFinalStatus(id);
+        if (!finalStatus) return;
+        
+        const inStaff = AppState.staffIndex.has(id);
+        const staffRow = AppState.staffIndex.get(id) || {};
+        const representativeRow = finalStatus.representative;
+        
+        if (inStaff) result.staffInExam++;
+        
+        if (finalStatus.isAccepted) {
+          result.uniqueAccepted++;
+          
+          const acceptedRecord = {
+            ...staffRow, ...representativeRow,
+            _nationalId: id,
+            _category: inStaff ? 'acceptedInStaff' : 'absentStaff',
+            _statusText: 'قبول',
+            _sheets: finalStatus.sheets,
+            _acceptedSheets: finalStatus.acceptedSheets,
+            _rejectedSheets: finalStatus.rejectedSheets,
+            _records: records,
+            _inStaff: inStaff,
+            _isDuplicate: finalStatus.isDuplicate
+          };
+          
+          result.allAccepted.push(acceptedRecord);
+          
+          finalStatus.acceptedSheets.forEach(sheet => {
+            const sheetRecord = { ...acceptedRecord, _sheetName: sheet };
+            if (inStaff) {
+              result.acceptedInStaff.push(sheetRecord);
+              if (!result.acceptedInStaffBySheet[sheet]) result.acceptedInStaffBySheet[sheet] = [];
+              result.acceptedInStaffBySheet[sheet].push(sheetRecord);
+            } else {
+              result.absentStaff.push(sheetRecord);
+              if (!result.absentStaffBySheet[sheet]) result.absentStaffBySheet[sheet] = [];
+              result.absentStaffBySheet[sheet].push(sheetRecord);
+            }
+          });
         } else {
-          result.ghost.push({ ...resultRow, _nationalId: id, _category: 'ghost', _statusText: status.statusText, _reason: 'پذیرفته شده نهایی ولی در پرسنل ثبت نشده' });
+          result.uniqueRejected++;
+          
+          const rejectedRecord = {
+            ...staffRow, ...representativeRow,
+            _nationalId: id,
+            _category: inStaff ? 'rejectedInStaff' : 'rejectedOnly',
+            _statusText: 'مردود',
+            _sheets: finalStatus.sheets,
+            _rejectedSheets: finalStatus.rejectedSheets,
+            _records: records,
+            _inStaff: inStaff,
+            _isDuplicate: finalStatus.isDuplicate
+          };
+          
+          result.allRejected.push(rejectedRecord);
+          
+          finalStatus.sheets.forEach(sheet => {
+            const sheetRecord = { ...rejectedRecord, _sheetName: sheet };
+            if (inStaff) {
+              result.rejectedInStaff.push(sheetRecord);
+              if (!result.rejectedInStaffBySheet[sheet]) result.rejectedInStaffBySheet[sheet] = [];
+              result.rejectedInStaffBySheet[sheet].push(sheetRecord);
+            } else {
+              result.rejectedOnly.push(sheetRecord);
+              if (!result.rejectedOnlyBySheet[sheet]) result.rejectedOnlyBySheet[sheet] = [];
+              result.rejectedOnlyBySheet[sheet].push(sheetRecord);
+            }
+          });
         }
-      } else if (status.isRejected) {
-        result.rejected.push({ ...(inStaff ? staffRow : {}), ...resultRow, _nationalId: id, _category: 'rejected', _statusText: status.statusText, _inStaff: inStaff });
-        if (inStaff) {
-          result.withoutExam.push({ ...staffRow, ...resultRow, _nationalId: id, _category: 'withoutExam', _reason: `در آزمون: ${status.statusText || 'مردود'}`, _statusText: status.statusText });
+        
+        if (finalStatus.isDuplicate) {
+          result.duplicates.push({
+            ...staffRow, ...representativeRow,
+            _nationalId: id,
+            _category: 'duplicate',
+            _sheets: finalStatus.sheets,
+            _acceptedSheets: finalStatus.acceptedSheets,
+            _rejectedSheets: finalStatus.rejectedSheets,
+            _finalStatus: finalStatus.isAccepted ? 'accepted' : 'rejected',
+            _finalStatusText: finalStatus.isAccepted 
+              ? `✅ قبول نهایی (در ${Utils.toPersianNum(finalStatus.acceptedCount)} شیت قبول از ${Utils.toPersianNum(finalStatus.totalRecords)})`
+              : `❌ مردود در همه ${Utils.toPersianNum(finalStatus.totalRecords)} شیت`,
+            _inStaff: inStaff,
+            _records: records
+          });
         }
-      } else if (status.isOther) {
-        result.other.push({ ...(inStaff ? staffRow : {}), ...resultRow, _nationalId: id, _category: 'other', _statusText: status.statusText, _inStaff: inStaff });
-        if (inStaff) {
-          result.withoutExam.push({ ...staffRow, ...resultRow, _nationalId: id, _category: 'withoutExam', _reason: `در آزمون: ${status.statusText || 'وضعیت نامشخص'}`, _statusText: status.statusText });
-        }
-      }
-    });
+      });
+    }
+    
     const allStaff = Object.values(AppState.staffData).flat();
     if (allStaff.length) {
       const staffHeaders = Object.keys(allStaff[0]);
@@ -1041,23 +891,40 @@ const DataProcessor = {
         const regions = {};
         allStaff.forEach(row => {
           const region = row[regionCol] || 'نامشخص';
-          if (!regions[region]) regions[region] = { total: 0, accepted: 0, rejected: 0, other: 0, withoutExam: 0, ghost: 0 };
+          if (!regions[region]) regions[region] = { total: 0, inExam: 0, accepted: 0, rejected: 0, ghost: 0 };
           regions[region].total++;
         });
-        result.accepted.forEach(r => { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].accepted++; });
-        result.rejected.forEach(r => { if (r._inStaff) { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].rejected++; } });
-        result.other.forEach(r => { if (r._inStaff) { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].other++; } });
-        result.withoutExam.forEach(r => { const region = r[regionCol] || 'نامشخص'; if (regions[region]) regions[region].withoutExam++; });
-        const allResults = Object.values(AppState.resultsData).flat();
-        if (allResults.length) {
-          const resultRegionCol = Utils.findColumn(Object.keys(allResults[0]), ['شهرستان شغل', 'شهرستان', 'منطقه', 'county']);
-          if (resultRegionCol) {
-            result.ghost.forEach(r => { const region = r[resultRegionCol] || 'نامشخص'; if (regions[region]) regions[region].ghost++; });
+        
+        AppState.staffIndex.forEach((staffRow, id) => {
+          const region = staffRow[regionCol] || 'نامشخص';
+          if (!regions[region]) return;
+          const finalStatus = AppState.resultsByPerson ? AppState.resultsByPerson.get(id) : null;
+          if (!finalStatus) return;
+          regions[region].inExam++;
+          const personStatus = this.getPersonFinalStatus(id);
+          if (personStatus && personStatus.isAccepted) {
+            regions[region].accepted++;
+          } else {
+            regions[region].rejected++;
           }
+        });
+        
+        if (AppState.resultsByPerson) {
+          AppState.resultsByPerson.forEach((records, id) => {
+            if (AppState.staffIndex.has(id)) return;
+            const personStatus = this.getPersonFinalStatus(id);
+            if (personStatus && personStatus.isAccepted) {
+              const firstRecord = records[0].row;
+              const region = firstRecord[regionCol] || 'نامشخص';
+              if (regions[region]) regions[region].ghost++;
+            }
+          });
         }
+        
         result.byRegion = regions;
       }
     }
+    
     AppState.crossRefCache = result;
     return result;
   },
@@ -1088,9 +955,7 @@ const SearchEngine = {
       if (term.length < 2) { this.closeResults(); return; }
       debounceTimer = setTimeout(() => this.search(term), 300);
     });
-    input.addEventListener('focus', () => {
-      if (AppState.globalSearchTerm.length >= 2) this.search(AppState.globalSearchTerm);
-    });
+    input.addEventListener('focus', () => { if (AppState.globalSearchTerm.length >= 2) this.search(AppState.globalSearchTerm); });
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.global-search') && !e.target.closest('.search-results-panel')) this.closeResults();
     });
@@ -1117,14 +982,16 @@ const SearchEngine = {
     }
     count.textContent = `${Utils.toPersianNum(results.length)} نتیجه یافت شد`;
     body.innerHTML = results.map(item => {
-      const status = Utils.analyzeResultStatus(AppState.resultsIndex.get(item.id) || {});
+      const finalStatus = DataProcessor.getPersonFinalStatus(item.id);
       const inStaff = AppState.staffIndex.has(item.id);
-      const inResults = AppState.resultsIndex.has(item.id);
+      const inResults = AppState.resultsByPerson ? AppState.resultsByPerson.has(item.id) : false;
       let badge = '';
-      if (inStaff && inResults && status.isAccepted) badge = '<span class="badge badge-success">✅ شاغل/قبول</span>';
-      else if (inResults && !status.isAccepted) badge = '<span class="badge badge-danger">❌ قبول نشده</span>';
-      else if (inResults && status.isAccepted && !inStaff) badge = '<span class="badge badge-purple">👻 غایب</span>';
+      if (inStaff && inResults && finalStatus && finalStatus.isAccepted) badge = '<span class="badge badge-success">✅ دارای شرایط استخدامی</span>';
+      else if (inStaff && inResults && finalStatus && !finalStatus.isAccepted) badge = '<span class="badge badge-danger">🚫 بدون ضابطه</span>';
+      else if (inResults && finalStatus && finalStatus.isAccepted && !inStaff) badge = '<span class="badge badge-purple">👻 پرسنل غایب</span>';
+      else if (inResults && finalStatus && !finalStatus.isAccepted && !inStaff) badge = '<span class="badge badge-danger">❌ مردود آزمون</span>';
       else if (inStaff && !inResults) badge = '<span class="badge badge-info">📋 در پرسنل (بدون آزمون)</span>';
+      if (finalStatus && finalStatus.isDuplicate) badge += ' <span class="badge badge-warning">🔁 تکراری</span>';
       return `
         <div class="search-result-item" onclick="SearchEngine.goToRecord('${item.id}', '${item.type}')">
           <div class="name">${item.name || 'بدون نام'} ${badge}</div>
@@ -1133,8 +1000,7 @@ const SearchEngine = {
             ${item.county ? `<span><i class="fas fa-map-marker-alt"></i> ${item.county}</span>` : ''}
             ${item.job ? `<span><i class="fas fa-briefcase"></i> ${item.job}</span>` : ''}
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
     panel.classList.add('show');
   },
@@ -1144,15 +1010,39 @@ const SearchEngine = {
     if (!row) return;
     const modal = document.createElement('div');
     modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);';
-    const status = Utils.analyzeResultStatus(AppState.resultsIndex.get(id) || {});
+    const finalStatus = DataProcessor.getPersonFinalStatus(id);
     const inStaff = AppState.staffIndex.has(id);
-    const inResults = AppState.resultsIndex.has(id);
+    const inResults = AppState.resultsByPerson ? AppState.resultsByPerson.has(id) : false;
     let category = '';
-    if (inStaff && inResults && status.isAccepted) category = '✅ شاغل (پذیرفته شده نهایی ثبت‌شده)';
-    else if (inResults && !status.isAccepted && inStaff) category = '🚫 خارج از ضابطه';
-    else if (inResults && status.isAccepted && !inStaff) category = '👻 غایب';
+    if (inStaff && inResults && finalStatus && finalStatus.isAccepted) category = '✅ دارای شرایط استخدامی';
+    else if (inStaff && inResults && finalStatus && !finalStatus.isAccepted) category = '🚫 بدون ضابطه';
+    else if (inResults && finalStatus && finalStatus.isAccepted && !inStaff) category = '👻 پرسنل غایب';
+    else if (inResults && finalStatus && !finalStatus.isAccepted && !inStaff) category = '❌ مردود آزمون';
     else if (inStaff && !inResults) category = '📋 در پرسنل (بدون آزمون)';
     else category = '⚠️ سایر';
+    let sheetsTable = '';
+    if (finalStatus && finalStatus.records && finalStatus.records.length > 0) {
+      const acceptedCount = finalStatus.acceptedCount;
+      const rejectedCount = finalStatus.rejectedCount;
+      sheetsTable = `
+        <div style="margin-top: 20px;">
+          <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;"><i class="fas fa-layer-group" style="color: var(--accent);"></i> سابقه در شیت‌های آزمون (${Utils.toPersianNum(finalStatus.totalRecords)} شیت):</h4>
+          ${finalStatus.isDuplicate ? `<div style="padding: 10px; background: rgba(245,158,11,0.1); border-right: 4px solid var(--warning); border-radius: 8px; margin-bottom: 10px; font-size: 12px;">
+            <strong>🔁 این فرد در چند شیت شرکت کرده است</strong><br>
+            <span style="color: var(--success);">✅ قبولی در ${Utils.toPersianNum(acceptedCount)} شیت</span> | 
+            <span style="color: var(--danger);">❌ مردودی در ${Utils.toPersianNum(rejectedCount)} شیت</span>
+            <br><strong style="color: var(--accent);">وضعیت نهایی: ${finalStatus.isAccepted ? '✅ قبول (اولویت قبولی)' : '❌ مردود'}</strong>
+          </div>` : ''}
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            ${finalStatus.records.map(r => `
+              <div style="padding: 10px 12px; background: var(--bg); border-radius: 8px; border-right: 4px solid ${r.status.isAccepted ? 'var(--success)' : 'var(--danger)'}; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <span style="font-weight: 600; font-size: 13px;">${r.sheet}</span>
+                <span class="badge ${r.status.isAccepted ? 'badge-success' : 'badge-danger'}">${r.status.isAccepted ? '✅ قبول' : '❌ مردود'}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    }
     const allData = { ...(AppState.staffIndex.get(id) || {}), ...(AppState.resultsIndex.get(id) || {}) };
     modal.innerHTML = `
       <div style="background: var(--surface); border-radius: var(--radius); max-width: 900px; width: 100%; max-height: 85vh; overflow: auto; padding: 24px;">
@@ -1163,17 +1053,21 @@ const SearchEngine = {
         <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
           <span class="badge badge-info" style="font-size: 13px; padding: 6px 12px;">وضعیت: ${category}</span>
           <span class="badge" style="background: rgba(79,70,229,0.1); color: var(--accent); font-size: 13px; padding: 6px 12px;">کدملی: ${Utils.toPersianNum(id)}</span>
+          ${finalStatus && finalStatus.isDuplicate ? '<span class="badge badge-warning" style="font-size: 13px; padding: 6px 12px;">🔁 در چند شیت</span>' : ''}
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
-          ${Object.entries(allData).filter(([k, v]) => !k.startsWith('_') && v).map(([k, v]) => `
-            <div style="padding: 10px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">${k}</div>
-              <div style="font-size: 13px; font-weight: 600; color: var(--text);">${Utils.formatCellValue(v, k)}</div>
-            </div>
-          `).join('')}
+        ${sheetsTable}
+        <div style="margin-top: 20px;">
+          <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;"><i class="fas fa-info-circle" style="color: var(--accent);"></i> اطلاعات تفصیلی:</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+            ${Object.entries(allData).filter(([k, v]) => !k.startsWith('_') && v).map(([k, v]) => `
+              <div style="padding: 10px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">${k}</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">${Utils.formatCellValue(v, k)}</div>
+              </div>
+            `).join('')}
+          </div>
         </div>
-      </div>
-    `;
+      </div>`;
     modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
     document.body.appendChild(modal);
   },
@@ -1196,88 +1090,58 @@ const Guide = {
     { title: 'خوش‌آمدگویی', icon: 'fa-hand-sparkles', content: `
       <p>به <strong>داشبورد تحلیل امور استخدامی</strong> اداره کل آموزش و پرورش استان خوزستان خوش آمدید.</p>
       <p>این نرم‌افزار برای <strong>تطبیق دو مجموعه داده</strong> طراحی شده است:</p>
-      <ul>
-        <li><strong>فایل پرسنل موجود:</strong> شامل اطلاعات شاغلان فعلی</li>
-        <li><strong>فایل نتایج آزمون:</strong> شامل شرکت‌کنندگان و وضعیت نهایی آن‌ها</li>
-      </ul>
-      <div class="info-box"><i class="fas fa-info-circle"></i> با این راهنما در ۸ گام با تمام قابلیت‌های نرم‌افزار آشنا می‌شوید.</div>
-      <p>آماده‌اید؟ بیایید شروع کنیم! 🚀</p>
+      <ul><li><strong>فایل پرسنل موجود:</strong> شامل اطلاعات شاغلان فعلی</li><li><strong>فایل نتایج آزمون:</strong> شامل شرکت‌کنندگان و وضعیت نهایی آن‌ها</li></ul>
+      <div class="info-box"><i class="fas fa-info-circle"></i> با این راهنما در ۹ گام با تمام قابلیت‌های نرم‌افزار آشنا می‌شوید.</div>
     ` },
     { title: 'بارگذاری فایل پرسنل', icon: 'fa-users', content: `
       <p>ابتدا روی دکمه <strong style="color: #10b981;">«پرسنل موجود»</strong> کلیک کنید.</p>
-      <ul>
-        <li>فایل اکسل پرسنل را انتخاب کنید</li>
-        <li>فایل باید <strong>حداقل یک ستون کدملی</strong> داشته باشد</li>
-      </ul>
+      <ul><li>فایل اکسل پرسنل را انتخاب کنید</li><li>فایل باید <strong>حداقل یک ستون کدملی</strong> داشته باشد</li></ul>
       <div class="warn-box"><i class="fas fa-exclamation-triangle"></i> نام ستون کدملی می‌تواند «کدملی»، «کد ملی» یا «national_id» باشد.</div>
     ` },
-    { title: 'بارگذاری فایل نتایج آزمون', icon: 'fa-clipboard-check', content: `
-      <p>سپس روی دکمه <strong style="color: #f59e0b;">«نتایج آزمون»</strong> کلیک کنید.</p>
-      <ul>
-        <li>فایل می‌تواند <strong>چندین شیت</strong> داشته باشد — همه پردازش می‌شوند</li>
-        <li>برای هر شیت، یک زیرمنو در سایدبار ساخته می‌شود</li>
-      </ul>
-      <div class="info-box"><i class="fas fa-lightbulb"></i> اگر فایل ۶ شیت داشته باشد، همه در منوی سمت راست نمایش داده می‌شوند.</div>
+    { title: 'انتخاب شیت‌های نتایج آزمون', icon: 'fa-list-check', content: `
+      <p>پس از انتخاب فایل نتایج آزمون، یک <strong>مودال</strong> باز می‌شود که لیست شیت‌های فایل را نشان می‌دهد.</p>
+      <ul><li>شیت‌هایی که می‌خواهید در تحلیل لحاظ شوند را <strong>تیک بزنید</strong></li><li>تعداد رکورد هر شیت نمایش داده می‌شود</li></ul>
     ` },
-    { title: 'داشبورد کلی', icon: 'fa-chart-pie', content: `
-      <p>پس از بارگذاری، وارد <strong>داشبورد کلی</strong> می‌شوید.</p>
+    { title: 'منطق محاسبه — بسیار مهم', icon: 'fa-code-merge', content: `
+      <p><strong>قانون طلایی:</strong> اگر یک شخص در چند شیت حضور داشته باشد و در <strong>حداقل یکی از شیت‌ها قبول</strong> شده باشد، در محاسبه نهایی <strong>قبول‌شده</strong> در نظر گرفته می‌شود.</p>
+      <div class="success-box"><i class="fas fa-check-circle"></i> <strong>مثال:</strong> فردی در شیت «دبیری» قبول و در شیت «کیفیت بخشی» مردود شده. این فرد <strong>قبول‌شده</strong> محسوب می‌شود.</div>
+      <div class="danger-box"><i class="fas fa-exclamation-triangle"></i> <strong>فقط</strong> اگر فرد در <strong>همه شیت‌ها مردود</strong> باشد، مردود محسوب می‌شود.</div>
+    ` },
+    { title: 'دو خروجی نهایی', icon: 'fa-sitemap', content: `
+      <p>در نهایت دو خروجی اصلی داریم:</p>
       <table>
-        <thead><tr><th>کارت</th><th>توضیح</th></tr></thead>
+        <thead><tr><th>گروه اصلی</th><th>زیرگروه</th><th>توضیح</th></tr></thead>
         <tbody>
-          <tr><td>👥 پرسنل موجود</td><td>کل رکوردهای یونیک پرسنل</td></tr>
-          <tr><td>📋 شرکت‌کنندگان</td><td>کل رکوردهای یونیک نتایج</td></tr>
-          <tr><td>✅ شاغل</td><td>پذیرفته نهایی + در پرسنل</td></tr>
-          <tr><td>❌ مردودی</td><td>مردود در آزمون</td></tr>
-          <tr><td>⚠️ سایر</td><td>انصراف، غایب، در حال بررسی</td></tr>
-          <tr><td>👻 غایبین</td><td>پذیرفته نهایی بدون ثبت در پرسنل</td></tr>
-          <tr><td>🚫 خارج از ضابطه</td><td>در نتایج قبول نشده ولی در پرسنل</td></tr>
+          <tr><td rowspan="2">✅ قبولی</td><td>دارای شرایط استخدامی</td><td>قبول + در پرسنل</td></tr>
+          <tr><td>پرسنل غایب</td><td>قبول + بدون ثبت در پرسنل</td></tr>
+          <tr><td rowspan="2">❌ مردودی</td><td>بدون ضابطه</td><td>مردود در همه شیت‌ها + در پرسنل</td></tr>
+          <tr><td>مردود آزمون</td><td>مردود در همه شیت‌ها + بدون پرسنل</td></tr>
         </tbody>
       </table>
     ` },
-    { title: 'کاوش در پرسنل و نتایج', icon: 'fa-table', content: `
-      <p>از منوی سمت راست هر شیت را جداگانه ببینید.</p>
+    { title: 'فیلتر وضعیت در شیت‌ها', icon: 'fa-filter', content: `
+      <p>در صفحه نمایش هر شیت، کمبوباکس <strong>«همه وضعیت‌ها»</strong> شامل همه مقادیر یونیک از ستون‌های زیر است:</p>
       <ul>
-        <li>با فیلترها و کادر جستجو رکورد خاص را پیدا کنید</li>
-        <li>صفحه‌بندی ۵۰ رکورد در هر صفحه فعال است</li>
+        <li>وضعیت نهایی نتیجه داوطلب</li>
+        <li>پیام عمومی نتیجه پایانی</li>
+        <li>وضعیت نهایی</li>
+        <li>پیام عمومی</li>
       </ul>
-      <div class="info-box"><i class="fas fa-search"></i> جستجو «ی/ي» و «ک/ك» عربی و فارسی را یکسان می‌بیند.</div>
+      <div class="info-box"><i class="fas fa-info-circle"></i> فیلتر بر اساس <strong>همه این ستون‌ها</strong> اعمال می‌شود، نه فقط یک ستون.</div>
     ` },
-    { title: 'تحلیل تطبیقی', icon: 'fa-magnifying-glass-chart', content: `
-      <p>روی <strong>«تحلیل تطبیقی»</strong> کلیک کنید تا ۶ زیرمنو ببینید:</p>
-      <table>
-        <thead><tr><th>زیرمنو</th><th>توضیح</th></tr></thead>
-        <tbody>
-          <tr><td>✅ قبولی‌ها (شاغل)</td><td>پذیرفته نهایی + در پرسنل</td></tr>
-          <tr><td>❌ مردودی‌ها</td><td>مردود در آزمون</td></tr>
-          <tr><td>⚠️ سایر نتایج</td><td>انصراف، غایب، در حال بررسی</td></tr>
-          <tr><td>👻 غایبین</td><td>پذیرفته نهایی بدون ثبت در پرسنل</td></tr>
-          <tr><td>🚫 خارج از ضابطه</td><td>در نتایج قبول نشده ولی در پرسنل</td></tr>
-          <tr><td>📊 آمار منطقه‌ای</td><td>جدول و نمودار تفکیک منطقه</td></tr>
-        </tbody>
-      </table>
-      <div class="success-box"><i class="fas fa-check-circle"></i> معیار قبولی فقط <strong>«پذیرفته شده نهایی»</strong> است.</div>
+    { title: 'گروه‌بندی بر اساس نام شیت', icon: 'fa-layer-group', content: `
+      <p>در همه بخش‌ها، رکوردها <strong>بر اساس نام شیت</strong> طبقه‌بندی می‌شوند.</p>
+      <ul><li>در بالای صفحه، <strong>تب‌های شیت</strong> نمایش داده می‌شود</li><li>با کلیک روی هر تب، رکوردهای آن شیت فیلتر می‌شوند</li></ul>
     ` },
-    { title: 'جستجوی سراسری', icon: 'fa-search', content: `
+    { title: 'جستجو و خروجی', icon: 'fa-search', content: `
       <p>در بالای صفحه یک <strong>کادر جستجوی سراسری</strong> وجود دارد.</p>
-      <ul>
-        <li>نام، نام خانوادگی، کدملی، شهرستان یا شغل را تایپ کنید</li>
-        <li>حداقل ۲ حرف لازم است</li>
-        <li>با کلیک روی هر نتیجه، پرونده کامل نمایش داده می‌شود</li>
-      </ul>
-      <div class="info-box"><i class="fas fa-keyboard"></i> با <span class="kbd">/</span> فوکوس روی جستجو، با <span class="kbd">Esc</span> بستن پنل.</div>
+      <p>چهار دکمه خروجی در نوار بالا:</p>
+      <ul><li><strong style="color: #0891b2;">HTML:</strong> خروجی از تمام صفحات با استایل کامل</li><li><strong style="color: #059669;">Excel:</strong> تمام شیت‌ها + تحلیل تطبیقی</li><li><strong style="color: #ef4444;">PDF:</strong> گزارش تصویری با نمودارها</li><li><strong style="color: #64748b;">چاپ:</strong> چاپ صفحه فعلی</li></ul>
     ` },
-    { title: 'خروجی و گزارش‌گیری', icon: 'fa-file-export', content: `
-      <p>سه دکمه خروجی در نوار بالا:</p>
-      <ul>
-        <li><strong style="color: #059669;">Excel:</strong> تمام شیت‌ها + تحلیل تطبیقی</li>
-        <li><strong style="color: #ef4444;">PDF:</strong> گزارش تصویری با نمودارها</li>
-        <li><strong style="color: #64748b;">چاپ:</strong> چاپ صفحه فعلی</li>
-      </ul>
-      <div class="info-box"><i class="fas fa-moon"></i> با دکمه ماه/خورشید بین حالت روشن و تاریک جابجا شوید.</div>
-      <p style="margin-top: 20px; text-align: center; font-weight: 700; color: var(--accent);">🎉 تبریک! با تمام قابلیت‌ها آشنا شدید.</p>
+    { title: 'پایان راهنما', icon: 'fa-flag-checkered', content: `
+      <p style="text-align: center; font-size: 15px; margin: 30px 0;">🎉 <strong>تبریک!</strong> شما با تمام قابلیت‌های نرم‌افزار آشنا شدید.</p>
     ` }
   ],
-
   init() {
     this.renderDots();
     this.renderStep();
@@ -1292,21 +1156,12 @@ const Guide = {
   },
   renderDots() {
     const container = document.getElementById('guide-steps');
-    container.innerHTML = this.steps.map((_, i) => 
-      `<div class="guide-step-dot ${i === this.currentStep ? 'active' : i < this.currentStep ? 'done' : ''}" onclick="Guide.goTo(${i})" title="گام ${i + 1}"></div>`
-    ).join('');
+    container.innerHTML = this.steps.map((_, i) => `<div class="guide-step-dot ${i === this.currentStep ? 'active' : i < this.currentStep ? 'done' : ''}" onclick="Guide.goTo(${i})" title="گام ${i + 1}"></div>`).join('');
   },
   renderStep() {
     const step = this.steps[this.currentStep];
     const body = document.getElementById('guide-body');
-    body.innerHTML = `
-      <h3>
-        <span class="step-num">${Utils.toPersianNum(this.currentStep + 1)}</span>
-        <i class="fas ${step.icon}" style="color: var(--accent);"></i>
-        ${step.title}
-      </h3>
-      ${step.content}
-    `;
+    body.innerHTML = `<h3><span class="step-num">${Utils.toPersianNum(this.currentStep + 1)}</span><i class="fas ${step.icon}" style="color: var(--accent);"></i> ${step.title}</h3>${step.content}`;
     body.scrollTop = 0;
     document.getElementById('guide-prev').disabled = this.currentStep === 0;
     const nextBtn = document.getElementById('guide-next');
@@ -1315,10 +1170,7 @@ const Guide = {
     this.renderDots();
   },
   goTo(index) { this.currentStep = index; this.renderStep(); },
-  next() {
-    if (this.currentStep < this.steps.length - 1) { this.currentStep++; this.renderStep(); }
-    else this.close();
-  },
+  next() { if (this.currentStep < this.steps.length - 1) { this.currentStep++; this.renderStep(); } else this.close(); },
   prev() { if (this.currentStep > 0) { this.currentStep--; this.renderStep(); } },
   open() { this.currentStep = 0; this.renderStep(); document.getElementById('guide-overlay').classList.add('show'); },
   close() { document.getElementById('guide-overlay').classList.remove('show'); }
@@ -1331,27 +1183,23 @@ const UI = {
   initSidebar() {
     const nav = document.getElementById('main-nav');
     nav.innerHTML = '';
+    const selectedResultsSheets = AppState.selectedSheets.length > 0 ? AppState.selectedSheets : Object.keys(AppState.resultsData);
+    const crossRef = DataProcessor.analyzeCrossReference();
     const menu = [
       { id: 'dashboard', title: 'داشبورد کلی', icon: 'fa-chart-pie', type: 'dashboard' },
       { id: 'staff', title: 'پرسنل موجود', icon: 'fa-users', type: 'parent',
-        children: Object.keys(AppState.staffData).map(s => ({
-          id: `staff-${s}`, title: s.trim(), type: 'staff-sheet', source: s,
-          count: (AppState.staffData[s] || []).length
-        }))
+        children: Object.keys(AppState.staffData).map(s => ({ id: `staff-${s}`, title: s.trim(), type: 'staff-sheet', source: s, count: (AppState.staffData[s] || []).length }))
       },
       { id: 'results', title: 'نتایج آزمون', icon: 'fa-clipboard-check', type: 'parent',
-        children: Object.keys(AppState.resultsData).map(s => ({
-          id: `results-${s}`, title: s.trim(), type: 'results-sheet', source: s,
-          count: (AppState.resultsData[s] || []).length
-        }))
+        children: selectedResultsSheets.map(s => ({ id: `results-${s}`, title: s.trim(), type: 'results-sheet', source: s, count: (AppState.resultsData[s] || []).length }))
       },
       { id: 'analysis', title: 'تحلیل تطبیقی', icon: 'fa-magnifying-glass-chart', type: 'parent',
         children: [
-          { id: 'cross-accepted', title: '✅ قبولی‌ها (شاغل)', type: 'cross', source: 'accepted' },
-          { id: 'cross-rejected', title: '❌ مردودی‌ها', type: 'cross', source: 'rejected' },
-          { id: 'cross-other', title: '⚠️ سایر نتایج', type: 'cross', source: 'other' },
-          { id: 'cross-ghost', title: '👻 غایبین', type: 'cross', source: 'ghost' },
-          { id: 'cross-noexam', title: '🚫 خارج از ضابطه', type: 'cross', source: 'withoutExam' },
+          { id: 'cross-accepted', title: '✅ دارای شرایط استخدامی', type: 'cross', source: 'acceptedInStaff', count: new Set(crossRef.acceptedInStaff.map(r => r._nationalId)).size },
+          { id: 'cross-absent', title: '👻 پرسنل غایب', type: 'cross', source: 'absentStaff', count: new Set(crossRef.absentStaff.map(r => r._nationalId)).size },
+          { id: 'cross-rejected', title: '🚫 بدون ضابطه', type: 'cross', source: 'rejectedInStaff', count: new Set(crossRef.rejectedInStaff.map(r => r._nationalId)).size },
+          { id: 'cross-rejected-only', title: '❌ مردود آزمون', type: 'cross', source: 'rejectedOnly', count: new Set(crossRef.rejectedOnly.map(r => r._nationalId)).size },
+          { id: 'cross-duplicates', title: '🔁 افراد تکراری', type: 'cross', source: 'duplicates', count: crossRef.duplicates.length },
           { id: 'cross-region', title: '📊 آمار منطقه‌ای', type: 'cross', source: 'byRegion' }
         ]
       }
@@ -1397,6 +1245,8 @@ const UI = {
     document.getElementById('page-title').textContent = item.title;
     AppState.currentView = { type: item.type, source: item.source, filters: {} };
     AppState.pagination.page = 1;
+    AppState.currentSheetTab = 'all';
+    AppState.currentStatusColumns = [];
     if (window.innerWidth <= 768) {
       document.getElementById('sidebar').classList.remove('mobile-open');
       document.getElementById('sidebar-overlay').classList.remove('active');
@@ -1423,7 +1273,18 @@ const UI = {
     const container = document.getElementById('dynamic-view');
     const crossRef = DataProcessor.analyzeCrossReference();
     const totalStaff = AppState.staffIndex.size;
-    const totalResults = AppState.resultsIndex.size;
+    const totalResults = AppState.resultsByPerson ? AppState.resultsByPerson.size : 0;
+    
+    const uniqueAccepted = new Set(crossRef.allAccepted.map(r => r._nationalId)).size;
+    const uniqueRejected = new Set(crossRef.allRejected.map(r => r._nationalId)).size;
+    const acceptedInStaffCount = new Set(crossRef.acceptedInStaff.map(r => r._nationalId)).size;
+    const absentStaffCount = new Set(crossRef.absentStaff.map(r => r._nationalId)).size;
+    const rejectedInStaffCount = new Set(crossRef.rejectedInStaff.map(r => r._nationalId)).size;
+    const rejectedOnlyCount = new Set(crossRef.rejectedOnly.map(r => r._nationalId)).size;
+    
+    const staffInExam = crossRef.staffInExam;
+    const employmentRate = staffInExam > 0 ? ((acceptedInStaffCount / staffInExam) * 100).toFixed(1) : 0;
+    
     const allStaff = Object.values(AppState.staffData).flat();
     const firstStaff = allStaff[0] || {};
     const staffHeaders = Object.keys(firstStaff);
@@ -1431,26 +1292,90 @@ const UI = {
     const countyCol = Utils.findColumn(staffHeaders, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county']);
     const genderDist = genderCol ? DataProcessor.aggregateByField(allStaff, genderCol, 5) : [];
     const countyDist = countyCol ? DataProcessor.aggregateByField(allStaff, countyCol, 20) : [];
-    const employed = crossRef.accepted.length;
-    const employmentRate = totalStaff > 0 ? ((employed / totalStaff) * 100).toFixed(1) : 0;
+    
     container.innerHTML = `
       <div class="kpi-grid">
-        <div class="kpi-card cyan"><div class="kpi-icon cyan"><i class="fas fa-users"></i></div><div class="kpi-content"><div class="kpi-label">کل پرسنل موجود</div><div class="kpi-value">${Utils.formatNumber(totalStaff)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> ${Object.keys(AppState.staffData).length} شیت</div></div></div>
-        <div class="kpi-card green"><div class="kpi-icon green"><i class="fas fa-clipboard-list"></i></div><div class="kpi-content"><div class="kpi-label">کل شرکت‌کنندگان آزمون</div><div class="kpi-value">${Utils.formatNumber(totalResults)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> ${Object.keys(AppState.resultsData).length} شیت</div></div></div>
-        <div class="kpi-card green"><div class="kpi-icon green"><i class="fas fa-user-check"></i></div><div class="kpi-content"><div class="kpi-label">شاغل (پذیرفته شده نهایی ثبت‌شده)</div><div class="kpi-value">${Utils.formatNumber(employed)}</div><div class="kpi-trend" style="color: var(--success);"><i class="fas fa-arrow-up"></i> ${Utils.toPersianNum(employmentRate)}٪</div></div></div>
-        <div class="kpi-card red"><div class="kpi-icon red"><i class="fas fa-user-times"></i></div><div class="kpi-content"><div class="kpi-label">مردودی‌ها</div><div class="kpi-value">${Utils.formatNumber(crossRef.rejected.length)}</div></div></div>
-        <div class="kpi-card orange"><div class="kpi-icon orange"><i class="fas fa-question-circle"></i></div><div class="kpi-content"><div class="kpi-label">سایر نتایج</div><div class="kpi-value">${Utils.formatNumber(crossRef.other.length)}</div></div></div>
-        <div class="kpi-card purple"><div class="kpi-icon purple"><i class="fas fa-ghost"></i></div><div class="kpi-content"><div class="kpi-label">غایبین</div><div class="kpi-value">${Utils.formatNumber(crossRef.ghost.length)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> پذیرفته نهایی، بدون ثبت در پرسنل</div></div></div>
-        <div class="kpi-card orange"><div class="kpi-icon orange"><i class="fas fa-user-slash"></i></div><div class="kpi-content"><div class="kpi-label">خارج از ضابطه</div><div class="kpi-value">${Utils.formatNumber(crossRef.withoutExam.length)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> در نتایج قبول نشده ولی در پرسنل هست</div></div></div>
+        <div class="kpi-card cyan">
+          <div class="kpi-icon cyan"><i class="fas fa-users"></i></div>
+          <div class="kpi-content"><div class="kpi-label">کل پرسنل موجود</div><div class="kpi-value">${Utils.formatNumber(totalStaff)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> ${Object.keys(AppState.staffData).length} شیت</div></div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon green"><i class="fas fa-clipboard-list"></i></div>
+          <div class="kpi-content"><div class="kpi-label">کل شرکت‌کنندگان (یونیک)</div><div class="kpi-value">${Utils.formatNumber(totalResults)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> ${AppState.selectedSheets.length || Object.keys(AppState.resultsData).length} شیت</div></div>
+        </div>
+        <div class="kpi-card cyan">
+          <div class="kpi-icon cyan"><i class="fas fa-user-graduate"></i></div>
+          <div class="kpi-content"><div class="kpi-label">پرسنل شرکت‌کننده در آزمون</div><div class="kpi-value">${Utils.formatNumber(staffInExam)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> مبنای محاسبه</div></div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon green"><i class="fas fa-check-circle"></i></div>
+          <div class="kpi-content"><div class="kpi-label">کل قبول‌شدگان (یونیک)</div><div class="kpi-value">${Utils.formatNumber(uniqueAccepted)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> در همه شیت‌ها</div></div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-icon red"><i class="fas fa-times-circle"></i></div>
+          <div class="kpi-content"><div class="kpi-label">کل مردودها (یونیک)</div><div class="kpi-value">${Utils.formatNumber(uniqueRejected)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> در همه شیت‌ها</div></div>
+        </div>
       </div>
+      
+      <div class="section-card" style="margin-bottom: 24px;">
+        <div class="card-header"><h3><i class="fas fa-sitemap" style="color: var(--accent);"></i> دو خروجی نهایی</h3></div>
+        <div style="padding: 20px;">
+          <div class="kpi-grid" style="margin-bottom: 0;">
+            <div class="kpi-card green">
+              <div class="kpi-icon green"><i class="fas fa-user-check"></i></div>
+              <div class="kpi-content">
+                <div class="kpi-label">✅ قبولی — دارای شرایط استخدامی</div>
+                <div class="kpi-value">${Utils.formatNumber(acceptedInStaffCount)}</div>
+                <div class="kpi-trend" style="color: var(--success);"><i class="fas fa-arrow-up"></i> ${Utils.toPersianNum(employmentRate)}٪ از شرکت‌کنندگان</div>
+              </div>
+            </div>
+            <div class="kpi-card purple">
+              <div class="kpi-icon purple"><i class="fas fa-ghost"></i></div>
+              <div class="kpi-content">
+                <div class="kpi-label">✅ قبولی — پرسنل غایب</div>
+                <div class="kpi-value">${Utils.formatNumber(absentStaffCount)}</div>
+                <div class="kpi-trend"><i class="fas fa-info-circle"></i> قبول + بدون ثبت در پرسنل</div>
+              </div>
+            </div>
+            <div class="kpi-card red">
+              <div class="kpi-icon red"><i class="fas fa-user-slash"></i></div>
+              <div class="kpi-content">
+                <div class="kpi-label">❌ مردودی — بدون ضابطه</div>
+                <div class="kpi-value">${Utils.formatNumber(rejectedInStaffCount)}</div>
+                <div class="kpi-trend"><i class="fas fa-info-circle"></i> مردود + در پرسنل</div>
+              </div>
+            </div>
+            <div class="kpi-card orange">
+              <div class="kpi-icon orange"><i class="fas fa-user-times"></i></div>
+              <div class="kpi-content">
+                <div class="kpi-label">❌ مردودی — مردود آزمون</div>
+                <div class="kpi-value">${Utils.formatNumber(rejectedOnlyCount)}</div>
+                <div class="kpi-trend"><i class="fas fa-info-circle"></i> مردود + بدون پرسنل</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="kpi-grid">
+        <div class="kpi-card orange">
+          <div class="kpi-icon orange"><i class="fas fa-clone"></i></div>
+          <div class="kpi-content"><div class="kpi-label">🔁 افراد تکراری</div><div class="kpi-value">${Utils.formatNumber(crossRef.duplicates.length)}</div><div class="kpi-trend"><i class="fas fa-info-circle"></i> در چند شیت حضور دارند</div></div>
+        </div>
+      </div>
+      
       <div class="charts-grid">
         <div class="chart-card"><h4><i class="fas fa-venus-mars"></i> توزیع جنسیت پرسنل</h4><canvas id="chart-gender"></canvas></div>
-        <div class="chart-card"><h4><i class="fas fa-chart-pie"></i> وضعیت استخدامی</h4><canvas id="chart-status"></canvas></div>
+        <div class="chart-card"><h4><i class="fas fa-chart-pie"></i> وضعیت نهایی</h4><canvas id="chart-status"></canvas></div>
       </div>
       ${countyCol ? `<div class="section-card"><div class="card-header"><h3><i class="fas fa-map-marked-alt" style="color: var(--accent);"></i> توزیع شهرستانی پرسنل</h3></div><div style="padding: 20px; height: 400px;"><canvas id="chart-county"></canvas></div></div>` : ''}
     `;
     this.renderChart('chart-gender', 'doughnut', genderDist.map(g => g[0]), genderDist.map(g => g[1]), ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#06b6d4']);
-    this.renderChart('chart-status', 'pie', ['شاغل', 'مردود', 'سایر', 'غایبین', 'خارج از ضابطه'], [crossRef.accepted.length, crossRef.rejected.length, crossRef.other.length, crossRef.ghost.length, crossRef.withoutExam.length], ['#10b981', '#ef4444', '#f59e0b', '#a855f7', '#64748b']);
+    this.renderChart('chart-status', 'doughnut', 
+      ['✅ دارای شرایط', '👻 پرسنل غایب', '🚫 بدون ضابطه', '❌ مردود آزمون'], 
+      [acceptedInStaffCount, absentStaffCount, rejectedInStaffCount, rejectedOnlyCount], 
+      ['#10b981', '#a855f7', '#ef4444', '#f59e0b']
+    );
     if (countyCol) this.renderChart('chart-county', 'bar', countyDist.map(c => c[0]), countyDist.map(c => c[1]), '#06b6d4');
   },
   
@@ -1463,6 +1388,7 @@ const UI = {
     const genderCol = Utils.findColumn(headers, ['جنسیت', 'جنسيت', 'gender']);
     AppState.currentTableData = rows;
     AppState.currentTableHeaders = headers;
+    AppState.currentStatusColumns = [];
     container.innerHTML = `
       <div class="filter-row">
         ${countyCol ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(rows.map(r => r[countyCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
@@ -1485,25 +1411,65 @@ const UI = {
     this.renderTableData(rows, headers);
   },
   
+  // ============================================================
+  // ✅ اصلاح‌شده: نمایش لیست افراد هر شیت با فیلتر وضعیت هوشمند
+  // ============================================================
   renderResultsSheet(sheetName) {
     const container = document.getElementById('dynamic-view');
     const rows = AppState.resultsData[sheetName] || [];
     if (!rows.length) { container.innerHTML = '<div class="empty-state">داده‌ای یافت نشد</div>'; return; }
+    
     const headers = Object.keys(rows[0]);
-    const statusCol = Utils.findColumn(headers, ['وضعیت', 'وضعیت نهایی', 'نتیجه', 'status', 'پیام عمومی']);
+    
+    // ✅ پیدا کردن همه ستون‌های وضعیت کلیدی
+    const statusColumns = Utils.findStatusColumns(headers);
+    
+    // ✅ جمع‌آوری همه مقادیر یونیک از همه ستون‌های وضعیت
+    const statusValues = new Set();
+    rows.forEach(row => {
+      statusColumns.forEach(col => {
+        const val = row[col];
+        if (val !== undefined && val !== null && String(val).trim() !== '') {
+          statusValues.add(String(val).trim());
+        }
+      });
+    });
+    const sortedStatusValues = Array.from(statusValues).sort();
+    
     const countyCol = Utils.findColumn(headers, ['شهرستان شغل', 'شهرستان', 'county', 'منطقه']);
+    
     AppState.currentTableData = rows;
     AppState.currentTableHeaders = headers;
+    AppState.currentStatusColumns = statusColumns;
+    
     container.innerHTML = `
       <div class="filter-row">
-        ${statusCol ? `<select class="filter-select" id="filter-status" onchange="UI.applyTableFilters()"><option value="">همه وضعیت‌ها</option>${[...new Set(rows.map(r => r[statusCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
-        ${countyCol ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(rows.map(r => r[countyCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
-        <input type="text" class="filter-input" id="table-search" placeholder="جستجو..." onkeyup="UI.applyTableFilters()">
+        ${sortedStatusValues.length > 0 ? `
+          <select class="filter-select" id="filter-status" onchange="UI.applyTableFilters()">
+            <option value="">همه وضعیت‌ها (${Utils.toPersianNum(sortedStatusValues.length)} مورد)</option>
+            ${sortedStatusValues.map(v => `<option value="${v.replace(/"/g, '&quot;')}">${v}</option>`).join('')}
+          </select>
+        ` : ''}
+        ${countyCol ? `
+          <select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()">
+            <option value="">همه شهرستان‌ها</option>
+            ${[...new Set(rows.map(r => r[countyCol]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}
+          </select>
+        ` : ''}
+        <input type="text" class="filter-input" id="table-search" placeholder="جستجو (نام، کدملی)..." onkeyup="UI.applyTableFilters()">
         <span style="font-size: 12px; color: var(--text-muted); margin-right: auto;" id="record-count">${Utils.formatNumber(rows.length)} رکورد</span>
       </div>
       <div class="section-card">
-        <div class="card-header"><h3><i class="fas fa-table" style="color: var(--accent);"></i> جدول نتایج - ${sheetName}</h3></div>
-        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;"><table class="data-table" id="main-table"></table></div>
+        <div class="card-header">
+          <h3><i class="fas fa-table" style="color: var(--accent);"></i> جدول نتایج - ${sheetName}</h3>
+          <span style="font-size: 11px; color: var(--text-muted); background: var(--bg); padding: 4px 8px; border-radius: 6px;">
+            <i class="fas fa-filter"></i> 
+            فیلتر بر اساس: ${statusColumns.length > 0 ? statusColumns.map(c => `<strong>${c}</strong>`).join(' | ') : 'نامشخص'}
+          </span>
+        </div>
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+          <table class="data-table" id="main-table"></table>
+        </div>
         <div class="pagination" id="pagination"></div>
       </div>
     `;
@@ -1513,36 +1479,99 @@ const UI = {
   renderCrossAnalysis(type) {
     const container = document.getElementById('dynamic-view');
     const crossRef = DataProcessor.analyzeCrossReference();
-    const data = crossRef[type] || [];
-    const titles = {
-      accepted: '✅ قبولی‌های ثبت‌شده (شاغل)',
-      rejected: '❌ مردودی‌های آزمون',
-      other: '⚠️ سایر وضعیت‌ها',
-      ghost: '👻 غایبین (پذیرفته شده نهایی ولی بدون ثبت در پرسنل)',
-      withoutExam: '🚫 خارج از ضابطه (در نتایج قبول نشده ولی در پرسنل هست)'
+    const config = {
+      acceptedInStaff: {
+        title: '✅ دارای شرایط استخدامی',
+        desc: 'افرادی که در آزمون قبول شده‌اند (در حداقل یک شیت) و در فایل پرسنل موجود نیز ثبت شده‌اند. <strong style="color: var(--success);">اولویت قبولی:</strong> اگر در چند شیت باشند و در یکی قبول شوند، در این گروه قرار می‌گیرند.',
+        data: crossRef.acceptedInStaff,
+        color: 'green', icon: 'user-check',
+        bySheet: crossRef.acceptedInStaffBySheet
+      },
+      absentStaff: {
+        title: '👻 پرسنل غایب',
+        desc: 'افرادی که در آزمون قبول شده‌اند (در حداقل یک شیت) ولی در فایل پرسنل موجود ثبت نشده‌اند',
+        data: crossRef.absentStaff,
+        color: 'purple', icon: 'ghost',
+        bySheet: crossRef.absentStaffBySheet
+      },
+      rejectedInStaff: {
+        title: '🚫 بدون ضابطه استخدامی',
+        desc: 'افرادی که در <strong style="color: var(--danger);">همه شیت‌ها مردود</strong> شده‌اند ولی در فایل پرسنل موجود ثبت شده‌اند. (توجه: اگر در یکی از شیت‌ها قبول باشند، در این گروه قرار نمی‌گیرند.)',
+        data: crossRef.rejectedInStaff,
+        color: 'red', icon: 'user-slash',
+        bySheet: crossRef.rejectedInStaffBySheet
+      },
+      rejectedOnly: {
+        title: '❌ مردود آزمون',
+        desc: 'افرادی که در همه شیت‌ها مردود شده‌اند و در فایل پرسنل موجود نیز ثبت نشده‌اند',
+        data: crossRef.rejectedOnly,
+        color: 'orange', icon: 'user-times',
+        bySheet: crossRef.rejectedOnlyBySheet
+      },
+      duplicates: {
+        title: '🔁 افراد تکراری',
+        desc: 'افرادی که در چند شیت حضور دارند. <strong style="color: var(--success);">قانون اولویت:</strong> اگر در حداقل یک شیت قبول باشند، در محاسبه نهایی قبول محسوب می‌شوند.',
+        data: crossRef.duplicates,
+        color: 'orange', icon: 'clone',
+        bySheet: null,
+        isDuplicateView: true
+      }
     };
-    const descriptions = {
-      accepted: 'افرادی که هم در فایل پرسنل ثبت شده‌اند و هم وضعیت نهایی آن‌ها در آزمون «پذیرفته شده نهایی» است',
-      rejected: 'افرادی که در آزمون مردود شده‌اند (چه در پرسنل باشند چه نباشند)',
-      other: 'افرادی که وضعیت آن‌ها انصراف، غایب یا در حال بررسی است',
-      ghost: 'افرادی که در آزمون «پذیرفته شده نهایی» هستند ولی در لیست پرسنل فعلی ثبت نشده‌اند',
-      withoutExam: 'افرادی که در فایل نتایج حضور دارند، وضعیت آن‌ها «پذیرفته شده نهایی» نیست، اما در فایل پرسنل ثبت شده‌اند'
-    };
-    const headers = data.length ? Object.keys(data[0]).filter(h => !h.startsWith('_')) : [];
+    const cfg = config[type];
+    if (!cfg) { container.innerHTML = '<div class="empty-state">داده‌ای یافت نشد</div>'; return; }
+    const data = cfg.data || [];
+    let headers;
+    if (cfg.isDuplicateView) headers = ['نام', 'نام خانوادگی', 'کدملی', '_sheetsDisplay', '_statusDisplay'];
+    else headers = data.length ? Object.keys(data[0]).filter(h => !h.startsWith('_')) : [];
     const countyField = Utils.findColumn(headers, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county']);
     AppState.currentTableData = data;
     AppState.currentTableHeaders = headers;
-    const cardColor = type === 'accepted' ? 'green' : type === 'rejected' ? 'red' : type === 'ghost' ? 'purple' : 'orange';
-    const iconName = type === 'accepted' ? 'check-circle' : type === 'rejected' ? 'times-circle' : type === 'ghost' ? 'ghost' : 'user-slash';
+    AppState.currentSheetTab = 'all';
+    AppState.currentView.isDuplicateView = cfg.isDuplicateView || false;
+    AppState.currentStatusColumns = [];
+    
+    const uniqueCount = new Set(data.map(r => r._nationalId)).size;
+    
+    let tabsHtml = '';
+    if (cfg.isDuplicateView) {
+      const acceptedCount = data.filter(r => r._finalStatus === 'accepted').length;
+      const rejectedCount = data.filter(r => r._finalStatus === 'rejected').length;
+      const staffCount = data.filter(r => r._inStaff).length;
+      tabsHtml = `
+        <div class="tabs-container" id="sheet-tabs">
+          <button class="tab-btn active" data-filter="all" onclick="UI.switchDuplicateFilter('all')"><i class="fas fa-list"></i> همه <span class="tab-count">${Utils.toPersianNum(data.length)}</span></button>
+          <button class="tab-btn" data-filter="accepted" onclick="UI.switchDuplicateFilter('accepted')"><i class="fas fa-check-circle"></i> قبول نهایی <span class="tab-count">${Utils.toPersianNum(acceptedCount)}</span></button>
+          <button class="tab-btn" data-filter="rejected" onclick="UI.switchDuplicateFilter('rejected')"><i class="fas fa-times-circle"></i> مردود در همه <span class="tab-count">${Utils.toPersianNum(rejectedCount)}</span></button>
+          <button class="tab-btn" data-filter="inStaff" onclick="UI.switchDuplicateFilter('inStaff')"><i class="fas fa-users"></i> در پرسنل <span class="tab-count">${Utils.toPersianNum(staffCount)}</span></button>
+        </div>`;
+    } else if (cfg.bySheet) {
+      const sheetNames = Object.keys(cfg.bySheet).sort();
+      if (sheetNames.length > 0) {
+        tabsHtml = `
+          <div class="tabs-container" id="sheet-tabs">
+            <button class="tab-btn active" data-sheet="all" onclick="UI.switchSheetTab('all', '${type}')"><i class="fas fa-list"></i> همه شیت‌ها <span class="tab-count">${Utils.toPersianNum(data.length)}</span></button>
+            ${sheetNames.map(sheet => `<button class="tab-btn" data-sheet="${sheet}" onclick="UI.switchSheetTab('${sheet.replace(/'/g, "\\'")}', '${type}')"><i class="fas fa-file-alt"></i> ${sheet} <span class="tab-count">${Utils.toPersianNum(cfg.bySheet[sheet].length)}</span></button>`).join('')}
+          </div>`;
+      }
+    }
+    
     container.innerHTML = `
       <div class="kpi-grid">
-        <div class="kpi-card ${cardColor}"><div class="kpi-icon ${cardColor}"><i class="fas fa-${iconName}"></i></div><div class="kpi-content"><div class="kpi-label">تعداد کل</div><div class="kpi-value">${Utils.formatNumber(data.length)}</div><div class="kpi-trend">${titles[type]}</div></div></div>
+        <div class="kpi-card ${cfg.color}">
+          <div class="kpi-icon ${cfg.color}"><i class="fas fa-${cfg.icon}"></i></div>
+          <div class="kpi-content"><div class="kpi-label">تعداد رکورد</div><div class="kpi-value">${Utils.formatNumber(data.length)}</div><div class="kpi-trend">${cfg.title}</div></div>
+        </div>
+        <div class="kpi-card cyan">
+          <div class="kpi-icon cyan"><i class="fas fa-fingerprint"></i></div>
+          <div class="kpi-content"><div class="kpi-label">تعداد افراد یونیک</div><div class="kpi-value">${Utils.formatNumber(uniqueCount)}</div><div class="kpi-trend">کدملی مجزا</div></div>
+        </div>
       </div>
-      <div class="section-card" style="margin-bottom: 20px;"><div style="padding: 16px 20px; background: var(--bg); border-bottom: 1px solid var(--border);"><p style="font-size: 13px; color: var(--text-muted); line-height: 1.8;"><i class="fas fa-info-circle" style="color: var(--accent); margin-left: 6px;"></i>${descriptions[type]}</p></div></div>
+      <div class="section-card" style="margin-bottom: 20px;"><div style="padding: 16px 20px; background: var(--bg); border-bottom: 1px solid var(--border);"><p style="font-size: 13px; color: var(--text-muted); line-height: 1.8;"><i class="fas fa-info-circle" style="color: var(--accent); margin-left: 6px;"></i>${cfg.desc}</p></div></div>
+      ${tabsHtml}
       <div class="section-card">
-        <div class="card-header"><h3><i class="fas fa-list" style="color: var(--accent);"></i> ${titles[type]}</h3><button class="page-btn" onclick="UI.exportCurrentData('${type}')"><i class="fas fa-file-excel"></i> خروجی Excel</button></div>
+        <div class="card-header"><h3><i class="fas fa-list" style="color: var(--accent);"></i> ${cfg.title} <span id="sheet-title-suffix" style="font-size: 12px; color: var(--text-muted); font-weight: 400;"></span></h3><button class="page-btn" onclick="UI.exportCurrentData('${type}')"><i class="fas fa-file-excel"></i> خروجی Excel</button></div>
         <div class="filter-row" style="margin: 16px;">
-          ${countyField ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(data.map(r => r[countyField]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
+          ${!cfg.isDuplicateView && countyField ? `<select class="filter-select" id="filter-county" onchange="UI.applyTableFilters()"><option value="">همه شهرستان‌ها</option>${[...new Set(data.map(r => r[countyField]).filter(Boolean))].sort().map(v => `<option value="${v}">${v}</option>`).join('')}</select>` : ''}
           <input type="text" class="filter-input" id="table-search" placeholder="جستجو (نام/کدملی)..." onkeyup="UI.applyTableFilters()">
           <span style="font-size: 12px; color: var(--text-muted); margin-right: auto;" id="record-count">${Utils.formatNumber(data.length)} رکورد</span>
         </div>
@@ -1550,6 +1579,95 @@ const UI = {
         <div class="pagination" id="pagination"></div>
       </div>
     `;
+    if (cfg.isDuplicateView) this.renderDuplicatesTable(data);
+    else this.renderTableData(data, headers);
+  },
+  
+  switchDuplicateFilter(filter) {
+    document.querySelectorAll('#sheet-tabs .tab-btn').forEach(b => { b.classList.toggle('active', b.dataset.filter === filter); });
+    AppState.pagination.page = 1;
+    const crossRef = DataProcessor.analyzeCrossReference();
+    let data = crossRef.duplicates;
+    if (filter === 'accepted') data = data.filter(r => r._finalStatus === 'accepted');
+    else if (filter === 'rejected') data = data.filter(r => r._finalStatus === 'rejected');
+    else if (filter === 'inStaff') data = data.filter(r => r._inStaff);
+    AppState.currentTableData = data;
+    this.renderDuplicatesTable(data);
+  },
+  
+  renderDuplicatesTable(data) {
+    const table = document.getElementById('main-table');
+    if (!table) return;
+    const { page, perPage } = AppState.pagination;
+    const start = (page - 1) * perPage;
+    const pageData = data.slice(start, start + perPage);
+    const totalPages = Math.ceil(data.length / perPage) || 1;
+    const countEl = document.getElementById('record-count');
+    if (countEl) countEl.textContent = `${Utils.formatNumber(data.length)} رکورد`;
+    let html = `<thead><tr><th>#</th><th>نام</th><th>نام خانوادگی</th><th>کدملی</th><th>شیت‌ها و وضعیت</th><th>وضعیت نهایی</th><th>در پرسنل</th><th>عملیات</th></tr></thead><tbody>`;
+    if (pageData.length === 0) {
+      html += `<tr><td colspan="8" style="text-align: center; padding: 30px; color: var(--text-muted);">رکوردی یافت نشد</td></tr>`;
+    } else {
+      pageData.forEach((row, idx) => {
+        const name = row['نام'] || '';
+        const family = row['نام خانوادگی'] || row['نام خانوادگي'] || '';
+        const sheetsHtml = row._records.map(r => `<span class="sheet-badge ${r.status.isAccepted ? 'accepted' : 'rejected'}" title="${r.sheet}">${r.status.isAccepted ? '✅' : '❌'} ${r.sheet.length > 25 ? r.sheet.substring(0, 25) + '…' : r.sheet}</span>`).join('');
+        const finalStatusBadge = row._finalStatus === 'accepted' ? '<span class="badge badge-success">✅ قبول نهایی</span>' : '<span class="badge badge-danger">❌ مردود</span>';
+        const inStaffBadge = row._inStaff ? '<span class="badge badge-info">✅ بله</span>' : '<span class="badge badge-warning">❌ خیر</span>';
+        html += '<tr>';
+        html += `<td>${Utils.toPersianNum(start + idx + 1)}</td>`;
+        html += `<td>${name}</td>`;
+        html += `<td>${family}</td>`;
+        html += `<td>${Utils.toPersianNum(row._nationalId)}</td>`;
+        html += `<td><div class="sheets-badges">${sheetsHtml}</div></td>`;
+        html += `<td>${finalStatusBadge}</td>`;
+        html += `<td>${inStaffBadge}</td>`;
+        html += `<td><button class="page-btn" onclick="SearchEngine.goToRecord('${row._nationalId}', 'results')"><i class="fas fa-eye"></i> مشاهده</button></td>`;
+        html += '</tr>';
+      });
+    }
+    html += '</tbody>';
+    table.innerHTML = html;
+    this.renderPagination(totalPages);
+  },
+  
+  switchSheetTab(sheetName, type) {
+    document.querySelectorAll('#sheet-tabs .tab-btn').forEach(b => { b.classList.toggle('active', b.dataset.sheet === sheetName); });
+    AppState.currentSheetTab = sheetName;
+    AppState.pagination.page = 1;
+    const crossRef = DataProcessor.analyzeCrossReference();
+    let data;
+    let titleSuffix = '';
+    let bySheet;
+    if (type === 'acceptedInStaff') bySheet = crossRef.acceptedInStaffBySheet;
+    else if (type === 'absentStaff') bySheet = crossRef.absentStaffBySheet;
+    else if (type === 'rejectedInStaff') bySheet = crossRef.rejectedInStaffBySheet;
+    else if (type === 'rejectedOnly') bySheet = crossRef.rejectedOnlyBySheet;
+    if (sheetName === 'all') {
+      if (type === 'acceptedInStaff') data = crossRef.acceptedInStaff;
+      else if (type === 'absentStaff') data = crossRef.absentStaff;
+      else if (type === 'rejectedInStaff') data = crossRef.rejectedInStaff;
+      else if (type === 'rejectedOnly') data = crossRef.rejectedOnly;
+      titleSuffix = '';
+    } else {
+      data = (bySheet && bySheet[sheetName]) || [];
+      titleSuffix = `- شیت: ${sheetName}`;
+    }
+    const headers = data.length ? Object.keys(data[0]).filter(h => !h.startsWith('_')) : AppState.currentTableHeaders;
+    AppState.currentTableData = data;
+    AppState.currentTableHeaders = headers;
+    const titleSuffixEl = document.getElementById('sheet-title-suffix');
+    if (titleSuffixEl) titleSuffixEl.textContent = titleSuffix;
+    const countyField = Utils.findColumn(headers, ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county']);
+    const countyEl = document.getElementById('filter-county');
+    if (countyEl && countyField) {
+      const currentVal = countyEl.value;
+      const newOptions = [...new Set(data.map(r => r[countyField]).filter(Boolean))].sort();
+      countyEl.innerHTML = `<option value="">همه شهرستان‌ها</option>${newOptions.map(v => `<option value="${v}">${v}</option>`).join('')}`;
+      if (newOptions.includes(currentVal)) countyEl.value = currentVal;
+    }
+    const searchEl = document.getElementById('table-search');
+    if (searchEl) searchEl.value = '';
     this.renderTableData(data, headers);
   },
   
@@ -1560,17 +1678,38 @@ const UI = {
     if (!byRegion || Object.keys(byRegion).length === 0) { container.innerHTML = '<div class="empty-state">داده‌ای برای نمایش وجود ندارد</div>'; return; }
     const sortedRegions = Object.entries(byRegion).sort((a, b) => b[1].total - a[1].total);
     const totalAll = Object.values(byRegion).reduce((sum, r) => sum + r.total, 0);
+    const totalInExam = Object.values(byRegion).reduce((sum, r) => sum + r.inExam, 0);
+    const totalAccepted = Object.values(byRegion).reduce((sum, r) => sum + r.accepted, 0);
+    const totalRejected = Object.values(byRegion).reduce((sum, r) => sum + r.rejected, 0);
+    const totalGhost = Object.values(byRegion).reduce((sum, r) => sum + r.ghost, 0);
     container.innerHTML = `
       <div class="section-card">
         <div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--accent);"></i> آمار پرسنل به تفکیک منطقه</h3></div>
         <div class="table-responsive">
           <table class="stats-table">
-            <thead><tr><th>ردیف</th><th>منطقه/شهرستان</th><th>پرسنل کل</th><th>قبولی ثبت‌شده</th><th>مردود (در پرسنل)</th><th>سایر (در پرسنل)</th><th>خارج از ضابطه</th><th>غایب</th><th>درصد قبولی</th></tr></thead>
+            <thead><tr><th>ردیف</th><th>منطقه/شهرستان</th><th>پرسنل کل</th><th>شرکت‌کننده در آزمون</th><th>✅ قبول‌شده</th><th>❌ مردود</th><th>👻 پرسنل غایب</th><th>درصد قبولی</th></tr></thead>
             <tbody>
               ${sortedRegions.map(([region, stats], idx) => `
-                <tr><td>${Utils.toPersianNum(idx + 1)}</td><td>${region}</td><td><strong>${Utils.formatNumber(stats.total)}</strong></td><td style="color: var(--success); font-weight: 600;">${Utils.formatNumber(stats.accepted)}</td><td style="color: var(--danger); font-weight: 600;">${Utils.formatNumber(stats.rejected)}</td><td style="color: var(--warning); font-weight: 600;">${Utils.formatNumber(stats.other)}</td><td style="color: #64748b; font-weight: 600;">${Utils.formatNumber(stats.withoutExam)}</td><td style="color: #a855f7; font-weight: 600;">${Utils.formatNumber(stats.ghost)}</td><td>${stats.total > 0 ? Utils.toPersianNum(((stats.accepted / stats.total) * 100).toFixed(1)) + '٪' : '—'}</td></tr>
+                <tr>
+                  <td>${Utils.toPersianNum(idx + 1)}</td>
+                  <td>${region}</td>
+                  <td><strong>${Utils.formatNumber(stats.total)}</strong></td>
+                  <td style="color: var(--info); font-weight: 600;">${Utils.formatNumber(stats.inExam)}</td>
+                  <td style="color: var(--success); font-weight: 600;">${Utils.formatNumber(stats.accepted)}</td>
+                  <td style="color: var(--danger); font-weight: 600;">${Utils.formatNumber(stats.rejected)}</td>
+                  <td style="color: #a855f7; font-weight: 600;">${Utils.formatNumber(stats.ghost)}</td>
+                  <td>${stats.inExam > 0 ? Utils.toPersianNum(((stats.accepted / stats.inExam) * 100).toFixed(1)) + '٪' : '—'}</td>
+                </tr>
               `).join('')}
-              <tr class="total-row"><td colspan="2">جمع کل</td><td>${Utils.formatNumber(totalAll)}</td><td>${Utils.formatNumber(crossRef.accepted.length)}</td><td>${Utils.formatNumber(crossRef.rejected.filter(r => r._inStaff).length)}</td><td>${Utils.formatNumber(crossRef.other.filter(r => r._inStaff).length)}</td><td>${Utils.formatNumber(crossRef.withoutExam.length)}</td><td>${Utils.formatNumber(crossRef.ghost.length)}</td><td>${totalAll > 0 ? Utils.toPersianNum(((crossRef.accepted.length / totalAll) * 100).toFixed(1)) + '٪' : '—'}</td></tr>
+              <tr class="total-row">
+                <td colspan="2">جمع کل</td>
+                <td>${Utils.formatNumber(totalAll)}</td>
+                <td>${Utils.formatNumber(totalInExam)}</td>
+                <td>${Utils.formatNumber(totalAccepted)}</td>
+                <td>${Utils.formatNumber(totalRejected)}</td>
+                <td>${Utils.formatNumber(totalGhost)}</td>
+                <td>${totalInExam > 0 ? Utils.toPersianNum(((totalAccepted / totalInExam) * 100).toFixed(1)) + '٪' : '—'}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1585,7 +1724,7 @@ const UI = {
     const { page, perPage } = AppState.pagination;
     const start = (page - 1) * perPage;
     const pageData = filtered.slice(start, start + perPage);
-    const totalPages = Math.ceil(filtered.length / perPage);
+    const totalPages = Math.ceil(filtered.length / perPage) || 1;
     const countEl = document.getElementById('record-count');
     if (countEl) countEl.textContent = `${Utils.formatNumber(filtered.length)} رکورد`;
     const table = document.getElementById('main-table');
@@ -1609,8 +1748,13 @@ const UI = {
     this.renderPagination(totalPages);
   },
   
+  // ============================================================
+  // ✅ اصلاح‌شده: فیلتر وضعیت در همه ستون‌های وضعیت کلیدی
+  // ============================================================
   getFilteredData(rows, headers) {
     let filtered = [...rows];
+    
+    // جستجوی متنی
     const searchEl = document.getElementById('table-search');
     if (searchEl && searchEl.value.trim()) {
       const term = Utils.normalizeForSearch(searchEl.value);
@@ -1622,9 +1766,12 @@ const UI = {
           let valStr = Utils.isIdColumn(key) ? Utils.normalizeNationalId(val) : Utils.normalizeForSearch(val);
           if (valStr.includes(term)) return true;
         }
+        if (row._nationalId && Utils.normalizeNationalId(row._nationalId).includes(term)) return true;
         return false;
       });
     }
+    
+    // فیلتر شهرستان
     const countyEl = document.getElementById('filter-county');
     if (countyEl && countyEl.value) {
       const countyCols = ['منطقه', 'شهرستان محل', 'شهرستان خدمت', 'شهرستان شغل', 'شهرستان', 'county'];
@@ -1633,6 +1780,8 @@ const UI = {
         return col && String(row[col]) === countyEl.value;
       });
     }
+    
+    // فیلتر جنسیت
     const genderEl = document.getElementById('filter-gender');
     if (genderEl && genderEl.value) {
       const genderCols = ['جنسیت', 'جنسيت', 'gender'];
@@ -1641,14 +1790,35 @@ const UI = {
         return col && String(row[col]) === genderEl.value;
       });
     }
+    
+    // ✅ فیلتر وضعیت — در همه ستون‌های وضعیت کلیدی بررسی می‌شود
     const statusEl = document.getElementById('filter-status');
     if (statusEl && statusEl.value) {
-      const statusCols = ['وضعیت', 'وضعیت نهایی', 'نتیجه', 'status', 'پیام عمومی'];
+      const selectedStatus = statusEl.value;
+      const statusColumnPatterns = [
+        'وضعیت نهایی نتیجه داوطلب',
+        'پیام عمومی نتیجه پایانی',
+        'وضعیت نهایی',
+        'وضعیت نهایی داوطلب',
+        'پیام عمومی'
+      ];
+      
       filtered = filtered.filter(row => {
-        const col = Object.keys(row).find(h => statusCols.some(c => new RegExp(c, 'i').test(h)));
-        return col && String(row[col]) === statusEl.value;
+        // آیا مقدار انتخاب‌شده در هر یک از ستون‌های وضعیت وجود دارد؟
+        for (const key of Object.keys(row)) {
+          if (key.startsWith('_')) continue;
+          const isStatusColumn = statusColumnPatterns.some(pattern => key.includes(pattern));
+          if (isStatusColumn) {
+            const val = row[key];
+            if (val !== undefined && val !== null) {
+              if (String(val).trim() === selectedStatus) return true;
+            }
+          }
+        }
+        return false;
       });
     }
+    
     return filtered;
   },
   
@@ -1656,7 +1826,8 @@ const UI = {
     AppState.pagination.page = 1;
     const rows = AppState.currentTableData;
     const headers = AppState.currentTableHeaders;
-    if (rows && headers) this.renderTableData(rows, headers);
+    if (AppState.currentView.isDuplicateView) this.renderDuplicatesTable(rows);
+    else if (rows && headers) this.renderTableData(rows, headers);
   },
   
   renderChart(id, type, labels, data, colors, extraOpts = {}) {
@@ -1678,12 +1849,7 @@ const UI = {
       },
       ...extraOpts
     };
-    const dataset = {
-      data,
-      backgroundColor: Array.isArray(colors) ? colors : new Array(labels.length).fill(colors),
-      borderColor: isDark ? '#151d2e' : '#ffffff',
-      borderWidth: 2
-    };
+    const dataset = { data, backgroundColor: Array.isArray(colors) ? colors : new Array(labels.length).fill(colors), borderColor: isDark ? '#151d2e' : '#ffffff', borderWidth: 2 };
     AppState.charts[id] = new Chart(canvas, { type, data: { labels, datasets: [dataset] }, options });
   },
   
@@ -1701,9 +1867,7 @@ const UI = {
       html += `<button class="page-btn" onclick="UI.goToPage(1)">۱</button>`;
       if (startPage > 2) html += '<span style="padding: 0 8px;">...</span>';
     }
-    for (let i = startPage; i <= endPage; i++) {
-      html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="UI.goToPage(${i})">${Utils.toPersianNum(i)}</button>`;
-    }
+    for (let i = startPage; i <= endPage; i++) html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="UI.goToPage(${i})">${Utils.toPersianNum(i)}</button>`;
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) html += '<span style="padding: 0 8px;">...</span>';
       html += `<button class="page-btn" onclick="UI.goToPage(${totalPages})">${Utils.toPersianNum(totalPages)}</button>`;
@@ -1717,16 +1881,37 @@ const UI = {
     AppState.pagination.page = page;
     const rows = AppState.currentTableData;
     const headers = AppState.currentTableHeaders;
-    if (rows && headers) this.renderTableData(rows, headers);
+    if (AppState.currentView.isDuplicateView) this.renderDuplicatesTable(rows);
+    else if (rows && headers) this.renderTableData(rows, headers);
     window.scrollTo({ top: 400, behavior: 'smooth' });
   },
   
   exportCurrentData(type) {
     const data = AppState.currentTableData || [];
     if (!data.length) return Utils.showToast('داده‌ای برای خروجی وجود ندارد', 'error');
-    const cleanData = data.map(row => { const clean = {}; Object.keys(row).forEach(k => { if (!k.startsWith('_')) clean[k] = row[k]; }); return clean; });
+    const cleanData = data.map(row => {
+      const clean = {};
+      if (type === 'duplicates') {
+        clean['نام'] = row['نام'] || '';
+        clean['نام خانوادگی'] = row['نام خانوادگی'] || row['نام خانوادگي'] || '';
+        clean['کدملی'] = row._nationalId;
+        clean['شیت‌های حضور'] = (row._sheets || []).join(' | ');
+        clean['شیت‌های قبولی'] = (row._acceptedSheets || []).join(' | ');
+        clean['شیت‌های مردودی'] = (row._rejectedSheets || []).join(' | ');
+        clean['وضعیت نهایی'] = row._finalStatusText || '';
+        clean['در پرسنل'] = row._inStaff ? 'بله' : 'خیر';
+        (row._records || []).forEach((r, i) => {
+          clean[`شیت ${i + 1}`] = r.sheet;
+          clean[`وضعیت شیت ${i + 1}`] = r.status.isAccepted ? 'قبول' : 'مردود';
+        });
+      } else {
+        Object.keys(row).forEach(k => { if (!k.startsWith('_')) clean[k] = row[k]; });
+      }
+      return clean;
+    });
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cleanData), type.substring(0, 31));
+    const sheetName = AppState.currentSheetTab && AppState.currentSheetTab !== 'all' ? `${type}-${AppState.currentSheetTab}`.substring(0, 31) : type.substring(0, 31);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cleanData), sheetName);
     XLSX.writeFile(wb, `${type}_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
     Utils.showToast('فایل Excel ایجاد شد', 'success');
   }
@@ -1742,26 +1927,168 @@ const ExportManager = {
       try {
         const wb = XLSX.utils.book_new();
         const today = new Date().toLocaleDateString('fa-IR');
-        Object.entries(AppState.staffData).forEach(([sheet, rows]) => {
-          if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), `پرسنل-${sheet}`.substring(0, 31));
-        });
-        Object.entries(AppState.resultsData).forEach(([sheet, rows]) => {
-          if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), `نتایج-${sheet}`.substring(0, 31));
-        });
+        Object.entries(AppState.staffData).forEach(([sheet, rows]) => { if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), `پرسنل-${sheet}`.substring(0, 31)); });
+        Object.entries(AppState.resultsData).forEach(([sheet, rows]) => { if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), `نتایج-${sheet}`.substring(0, 31)); });
         const crossRef = DataProcessor.analyzeCrossReference();
-        const labels = { accepted: 'قبولی‌ها', rejected: 'مردودی‌ها', other: 'سایر', ghost: 'غایبین', withoutExam: 'خارج_از_ضابطه' };
-        ['accepted', 'rejected', 'other', 'ghost', 'withoutExam'].forEach(type => {
-          if (crossRef[type].length) {
-            const clean = crossRef[type].map(r => { const c = {}; Object.keys(r).forEach(k => { if (!k.startsWith('_')) c[k] = r[k]; }); return c; });
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(clean), labels[type].substring(0, 31));
-          }
-        });
+        Object.entries(crossRef.acceptedInStaffBySheet).forEach(([sheet, records]) => { if (records.length) { const clean = records.map(r => { const c = {}; Object.keys(r).forEach(k => { if (!k.startsWith('_')) c[k] = r[k]; }); return c; }); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(clean), `دارای_شرایط-${sheet}`.substring(0, 31)); } });
+        Object.entries(crossRef.absentStaffBySheet).forEach(([sheet, records]) => { if (records.length) { const clean = records.map(r => { const c = {}; Object.keys(r).forEach(k => { if (!k.startsWith('_')) c[k] = r[k]; }); return c; }); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(clean), `پرسنل_غایب-${sheet}`.substring(0, 31)); } });
+        Object.entries(crossRef.rejectedInStaffBySheet).forEach(([sheet, records]) => { if (records.length) { const clean = records.map(r => { const c = {}; Object.keys(r).forEach(k => { if (!k.startsWith('_')) c[k] = r[k]; }); return c; }); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(clean), `بدون_ضابطه-${sheet}`.substring(0, 31)); } });
+        Object.entries(crossRef.rejectedOnlyBySheet).forEach(([sheet, records]) => { if (records.length) { const clean = records.map(r => { const c = {}; Object.keys(r).forEach(k => { if (!k.startsWith('_')) c[k] = r[k]; }); return c; }); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(clean), `مردود_آزمون-${sheet}`.substring(0, 31)); } });
+        if (crossRef.duplicates.length) {
+          const dupClean = crossRef.duplicates.map(row => {
+            const clean = {};
+            clean['نام'] = row['نام'] || '';
+            clean['نام خانوادگی'] = row['نام خانوادگی'] || row['نام خانوادگي'] || '';
+            clean['کدملی'] = row._nationalId;
+            clean['شیت‌های حضور'] = (row._sheets || []).join(' | ');
+            clean['شیت‌های قبولی'] = (row._acceptedSheets || []).join(' | ');
+            clean['شیت‌های مردودی'] = (row._rejectedSheets || []).join(' | ');
+            clean['وضعیت نهایی'] = row._finalStatusText || '';
+            clean['در پرسنل'] = row._inStaff ? 'بله' : 'خیر';
+            return clean;
+          });
+          XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dupClean), 'افراد_تکراری');
+        }
         XLSX.writeFile(wb, `تحلیل_استخدامی_${today}.xlsx`);
         Utils.showToast('فایل Excel با موفقیت ایجاد شد', 'success');
       } catch (e) { Utils.showToast('خطا در ایجاد فایل', 'error'); }
       Utils.showLoading(false);
     }, 100);
   },
+  
+  toHTML() {
+    Utils.showLoading(true, 'در حال ایجاد فایل HTML...');
+    setTimeout(() => {
+      try {
+        const crossRef = DataProcessor.analyzeCrossReference();
+        const today = new Date().toLocaleDateString('fa-IR');
+        const acceptedInStaffCount = new Set(crossRef.acceptedInStaff.map(r => r._nationalId)).size;
+        const absentStaffCount = new Set(crossRef.absentStaff.map(r => r._nationalId)).size;
+        const rejectedInStaffCount = new Set(crossRef.rejectedInStaff.map(r => r._nationalId)).size;
+        const rejectedOnlyCount = new Set(crossRef.rejectedOnly.map(r => r._nationalId)).size;
+        const styles = `<style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: 'Vazirmatn', Tahoma, sans-serif; background: #f8fafc; color: #0f172a; direction: rtl; padding: 20px; }
+          h2 { font-size: 18px; margin: 24px 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; }
+          h2 i { color: #4f46e5; margin-left: 8px; }
+          .header { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 24px; }
+          .header h1 { color: #fff; font-size: 22px; margin-bottom: 8px; }
+          .header p { opacity: 0.9; margin-top: 6px; font-size: 13px; }
+          .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+          .info-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center; }
+          .info-card .label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+          .info-card .value { font-size: 22px; font-weight: 800; color: #4f46e5; }
+          .info-card.green .value { color: #10b981; }
+          .info-card.red .value { color: #ef4444; }
+          .info-card.purple .value { color: #a855f7; }
+          .info-card.orange .value { color: #f59e0b; }
+          .info-card.cyan .value { color: #06b6d4; }
+          table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 24px; }
+          th { background: #f1f5f9; padding: 12px 10px; text-align: right; font-size: 12px; color: #475569; border-bottom: 1px solid #e2e8f0; }
+          td { padding: 10px; font-size: 12px; border-bottom: 1px solid #f1f5f9; }
+          .badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+          .badge-success { background: #d1fae5; color: #065f46; }
+          .badge-danger { background: #fee2e2; color: #991b1b; }
+          .badge-info { background: #cffafe; color: #155e75; }
+          .badge-warning { background: #fef3c7; color: #92400e; }
+          .sheet-badge { display: inline-block; padding: 2px 6px; border-radius: 6px; font-size: 10px; margin: 2px; }
+          .sheet-badge.accepted { background: #d1fae5; color: #065f46; }
+          .sheet-badge.rejected { background: #fee2e2; color: #991b1b; }
+          .section { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+          .section-desc { background: #f8fafc; padding: 12px; border-radius: 8px; font-size: 12px; color: #64748b; margin-bottom: 16px; border-right: 4px solid #4f46e5; }
+          .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; }
+        </style>`;
+        let html = `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><title>گزارش تحلیل استخدامی - ${today}</title><link href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" rel="stylesheet">${styles}</head><body>
+<div class="header"><h1>📊 داشبورد تحلیل امور استخدامی</h1><p>اداره کل آموزش و پرورش استان خوزستان</p><p>تاریخ گزارش: ${today}</p></div>
+<div class="info-grid">
+  <div class="info-card"><div class="label">کل پرسنل موجود</div><div class="value">${Utils.formatNumber(AppState.staffIndex.size)}</div></div>
+  <div class="info-card cyan"><div class="label">پرسنل شرکت‌کننده در آزمون</div><div class="value">${Utils.formatNumber(crossRef.staffInExam)}</div></div>
+  <div class="info-card green"><div class="label">✅ دارای شرایط استخدامی</div><div class="value">${Utils.formatNumber(acceptedInStaffCount)}</div></div>
+  <div class="info-card purple"><div class="label">👻 پرسنل غایب</div><div class="value">${Utils.formatNumber(absentStaffCount)}</div></div>
+  <div class="info-card red"><div class="label">🚫 بدون ضابطه</div><div class="value">${Utils.formatNumber(rejectedInStaffCount)}</div></div>
+  <div class="info-card orange"><div class="label">❌ مردود آزمون</div><div class="value">${Utils.formatNumber(rejectedOnlyCount)}</div></div>
+  <div class="info-card orange"><div class="label">🔁 افراد تکراری</div><div class="value">${Utils.formatNumber(crossRef.duplicates.length)}</div></div>
+</div>`;
+        const buildTable = (headers, data) => {
+          if (!data.length) return '<p style="text-align: center; color: #94a3b8; padding: 20px;">داده‌ای موجود نیست</p>';
+          const displayHeaders = headers.filter(h => !h.startsWith('_'));
+          let html = '<table><thead><tr><th>#</th>';
+          displayHeaders.forEach(h => html += `<th>${h}</th>`);
+          html += '</tr></thead><tbody>';
+          data.forEach((row, idx) => {
+            html += '<tr>';
+            html += `<td>${Utils.toPersianNum(idx + 1)}</td>`;
+            displayHeaders.forEach(h => { html += `<td>${Utils.formatCellValue(row[h], h)}</td>`; });
+            html += '</tr>';
+          });
+          html += '</tbody></table>';
+          return html;
+        };
+        html += `<div class="section"><h2>✅ دارای شرایط استخدامی (${Utils.toPersianNum(acceptedInStaffCount)} نفر)</h2><div class="section-desc">افرادی که در آزمون قبول شده‌اند و در فایل پرسنل موجود نیز ثبت شده‌اند</div>`;
+        Object.entries(crossRef.acceptedInStaffBySheet).forEach(([sheet, records]) => {
+          if (!records.length) return;
+          html += `<h3 style="font-size: 14px; margin: 16px 0 8px 0; color: #64748b;">📄 ${sheet} (${Utils.toPersianNum(records.length)} رکورد)</h3>`;
+          html += buildTable(Object.keys(records[0]).filter(h => !h.startsWith('_')), records);
+        });
+        html += `</div>`;
+        html += `<div class="section"><h2>👻 پرسنل غایب (${Utils.toPersianNum(absentStaffCount)} نفر)</h2><div class="section-desc">افرادی که در آزمون قبول شده‌اند ولی در فایل پرسنل موجود ثبت نشده‌اند</div>`;
+        Object.entries(crossRef.absentStaffBySheet).forEach(([sheet, records]) => {
+          if (!records.length) return;
+          html += `<h3 style="font-size: 14px; margin: 16px 0 8px 0; color: #64748b;">📄 ${sheet} (${Utils.toPersianNum(records.length)} رکورد)</h3>`;
+          html += buildTable(Object.keys(records[0]).filter(h => !h.startsWith('_')), records);
+        });
+        html += `</div>`;
+        html += `<div class="section"><h2>🚫 بدون ضابطه استخدامی (${Utils.toPersianNum(rejectedInStaffCount)} نفر)</h2><div class="section-desc">افرادی که در همه شیت‌ها مردود شده‌اند ولی در فایل پرسنل موجود ثبت شده‌اند</div>`;
+        Object.entries(crossRef.rejectedInStaffBySheet).forEach(([sheet, records]) => {
+          if (!records.length) return;
+          html += `<h3 style="font-size: 14px; margin: 16px 0 8px 0; color: #64748b;">📄 ${sheet} (${Utils.toPersianNum(records.length)} رکورد)</h3>`;
+          html += buildTable(Object.keys(records[0]).filter(h => !h.startsWith('_')), records);
+        });
+        html += `</div>`;
+        html += `<div class="section"><h2>❌ مردود آزمون (${Utils.toPersianNum(rejectedOnlyCount)} نفر)</h2><div class="section-desc">افرادی که در همه شیت‌ها مردود شده‌اند و در فایل پرسنل موجود نیز ثبت نشده‌اند</div>`;
+        Object.entries(crossRef.rejectedOnlyBySheet).forEach(([sheet, records]) => {
+          if (!records.length) return;
+          html += `<h3 style="font-size: 14px; margin: 16px 0 8px 0; color: #64748b;">📄 ${sheet} (${Utils.toPersianNum(records.length)} رکورد)</h3>`;
+          html += buildTable(Object.keys(records[0]).filter(h => !h.startsWith('_')), records);
+        });
+        html += `</div>`;
+        if (crossRef.duplicates.length) {
+          html += `<div class="section"><h2>🔁 افراد تکراری (${Utils.toPersianNum(crossRef.duplicates.length)} نفر)</h2><div class="section-desc">افرادی که در چند شیت حضور دارند. اگر در حداقل یک شیت قبول باشند، قبول محسوب می‌شوند.</div><table><thead><tr><th>#</th><th>نام</th><th>نام خانوادگی</th><th>کدملی</th><th>شیت‌ها و وضعیت</th><th>وضعیت نهایی</th><th>در پرسنل</th></tr></thead><tbody>`;
+          crossRef.duplicates.forEach((row, idx) => {
+            const sheetsHtml = (row._records || []).map(r => `<span class="sheet-badge ${r.status.isAccepted ? 'accepted' : 'rejected'}">${r.status.isAccepted ? '✅' : '❌'} ${r.sheet}</span>`).join('');
+            const finalBadge = row._finalStatus === 'accepted' ? '<span class="badge badge-success">✅ قبول نهایی</span>' : '<span class="badge badge-danger">❌ مردود</span>';
+            const inStaffBadge = row._inStaff ? '<span class="badge badge-info">✅ بله</span>' : '<span class="badge badge-warning">❌ خیر</span>';
+            html += `<tr><td>${Utils.toPersianNum(idx + 1)}</td><td>${row['نام'] || ''}</td><td>${row['نام خانوادگی'] || row['نام خانوادگي'] || ''}</td><td>${Utils.toPersianNum(row._nationalId)}</td><td>${sheetsHtml}</td><td>${finalBadge}</td><td>${inStaffBadge}</td></tr>`;
+          });
+          html += `</tbody></table></div>`;
+        }
+        if (crossRef.byRegion && Object.keys(crossRef.byRegion).length) {
+          html += `<div class="section"><h2>📊 آمار منطقه‌ای</h2><table><thead><tr><th>#</th><th>منطقه/شهرستان</th><th>پرسنل کل</th><th>شرکت‌کننده</th><th>✅ قبول‌شده</th><th>❌ مردود</th><th>👻 غایب</th><th>درصد</th></tr></thead><tbody>`;
+          const sortedRegions = Object.entries(crossRef.byRegion).sort((a, b) => b[1].total - a[1].total);
+          sortedRegions.forEach(([region, stats], idx) => {
+            html += `<tr><td>${Utils.toPersianNum(idx + 1)}</td><td>${region}</td><td><strong>${Utils.formatNumber(stats.total)}</strong></td><td>${Utils.formatNumber(stats.inExam)}</td><td style="color: #10b981; font-weight: 600;">${Utils.formatNumber(stats.accepted)}</td><td style="color: #ef4444; font-weight: 600;">${Utils.formatNumber(stats.rejected)}</td><td style="color: #a855f7; font-weight: 600;">${Utils.formatNumber(stats.ghost)}</td><td>${stats.inExam > 0 ? Utils.toPersianNum(((stats.accepted / stats.inExam) * 100).toFixed(1)) + '٪' : '—'}</td></tr>`;
+          });
+          html += `</tbody></table></div>`;
+        }
+        html += `<div class="footer"><p>برنامه‌نویس: شرکت سانا ایده الکترونیک کرخه - مهندس سیدمحمدمهدی موسوی</p><p style="margin-top: 6px;">www.sanaide.ir</p><p style="margin-top: 12px; color: #94a3b8;">گزارش تولید شده در تاریخ ${today}</p></div></body></html>`;
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `گزارش_تحلیل_استخدامی_${today.replace(/\//g, '-')}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        Utils.showToast('فایل HTML با موفقیت ایجاد شد', 'success');
+      } catch (e) {
+        console.error('HTML export error:', e);
+        Utils.showToast('خطا در ایجاد فایل HTML', 'error');
+      }
+      Utils.showLoading(false);
+    }, 100);
+  },
+  
   async toPDF() {
     Utils.showLoading(true, 'ایجاد PDF...');
     await new Promise(r => setTimeout(r, 100));
@@ -1820,22 +2147,36 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('staff-file').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    DataProcessor.processFile(file, 'staff', (success) => {
+    DataProcessor.processStaffFile(file, (success) => {
       if (success) {
         Utils.showToast(`فایل پرسنل بارگذاری شد (${AppState.staffIndex.size} رکورد)`, 'success');
         checkDataReady();
       }
     });
+    e.target.value = '';
   });
   document.getElementById('results-file').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    DataProcessor.processFile(file, 'results', (success) => {
-      if (success) {
-        Utils.showToast(`فایل نتایج بارگذاری شد (${AppState.resultsIndex.size} رکورد در ${Object.keys(AppState.resultsData).length} شیت)`, 'success');
+    Utils.showLoading(true, 'در حال خواندن فایل نتایج...');
+    DataProcessor.readResultsFileMetadata(file, (sheetNames) => {
+      Utils.showLoading(false);
+      if (!sheetNames || sheetNames.length === 0) { Utils.showToast('فایل نتایج شیتی ندارد', 'error'); return; }
+      if (sheetNames.length === 1) {
+        const filteredData = {};
+        filteredData[sheetNames[0]] = AppState.allSheetsRaw[sheetNames[0]];
+        AppState.resultsData = filteredData;
+        AppState.selectedSheets = [sheetNames[0]];
+        DataProcessor.buildResultsIndex();
+        DataProcessor.buildSearchIndex();
+        AppState.crossRefCache = null;
+        Utils.showToast(`فایل نتایج بارگذاری شد (${AppState.resultsByPerson.size} رکورد)`, 'success');
         checkDataReady();
+      } else {
+        SheetSelector.open(file, sheetNames);
       }
     });
+    e.target.value = '';
   });
   document.getElementById('toggle-sidebar').onclick = () => {
     if (window.innerWidth <= 768) {
@@ -1860,6 +2201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('dark');
     Chart.defaults.color = '#f1f5f9';
   }
+  document.getElementById('export-html').onclick = () => ExportManager.toHTML();
   document.getElementById('export-excel').onclick = () => ExportManager.toExcel();
   document.getElementById('export-pdf').onclick = () => ExportManager.toPDF();
   document.getElementById('print-btn').onclick = () => ExportManager.print();
